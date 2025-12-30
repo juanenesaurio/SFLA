@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema fululunqueador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* animación dropdown */
+    .dropdown {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .dropdown.open {
+      max-height: 500px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-white">
+
+<!-- ================= BIENVENIDA ================= -->
+<section id="bienvenida"
+  class="min-h-screen flex items-center justify-center px-6"
+  style="background-image: url('assets/img/fondo n.jpg'); background-size: cover; background-position: center;">
+
+  <button onclick="irAMenu()"
+    class="w-full max-w-md bg-gray-800 border border-gray-600
+           rounded-3xl p-8 text-xl font-semibold
+           animate-pulse active:scale-95 transition">
+
+    Bienvenido al sistema fululunqueador<br>
+    de La Aguarescencia 🤹‍♂️<br><br>
+    <span class="text-sm opacity-70">
+      haz click para continuar
+    </span>
+  </button>
+</section>
+
+<!-- ================= MENU PRINCIPAL ================= -->
+<section id="menuPrincipal"
+  class="hidden min-h-screen flex flex-col items-center justify-center gap-6 px-6">
+
+  <button onclick="irANuevaOrden()"
+    class="w-full max-w-md bg-green-600 py-5 rounded-2xl text-2xl
+           active:scale-90 transition">
+    Nueva orden
+  </button>
+
+  <button onclick="irAOrdenes()"
+    class="w-full max-w-md bg-blue-600 py-5 rounded-2xl text-2xl
+           active:scale-90 transition">
+    Órdenes
+  </button>
+</section>
+
+<!-- ================= NUEVA ORDEN ================= -->
+<section id="nuevaOrden"
+  class="hidden min-h-screen flex flex-col px-4 pt-4 pb-24">
+
+  <!-- Barra mesa -->
+  <div class="relative mb-4">
+    <button onclick="toggleMesas()"
+      class="w-full bg-[#007BA7] py-4 rounded-xl font-bold active:scale-95 transition">
+      Mesa: <span id="mesaSeleccionada">Seleccionar</span>
+    </button>
+
+    <div id="listaMesas"
+      class="dropdown absolute w-full bg-[#5DADE2] rounded-xl mt-2 z-10">
+
+      <div class="grid grid-cols-2 text-gray-900">
+        <button onclick="seleccionarMesa(1)" class="p-4 active:bg-blue-300">Mesa 1</button>
+        <button onclick="seleccionarMesa(2)" class="p-4 active:bg-blue-300">Mesa 2</button>
+        <button onclick="seleccionarMesa(3)" class="p-4 active:bg-blue-300">Mesa 3</button>
+        <button onclick="seleccionarMesa(4)" class="p-4 active:bg-blue-300">Mesa 4</button>
+        <button onclick="seleccionarMesa(5)" class="p-4 active:bg-blue-300">Mesa 5</button>
+        <button onclick="seleccionarMesa(6)" class="p-4 active:bg-blue-300">Mesa 6</button>
+        <button onclick="seleccionarMesa(7)" class="p-4 active:bg-blue-300">Mesa 7</button>
+        <button onclick="seleccionarMesa(8)" class="p-4 active:bg-blue-300">Mesa 8</button>
+        <button onclick="seleccionarMesa(9)" class="p-4 active:bg-blue-300">Mesa 9</button>
+        <button onclick="seleccionarMesa(10)" class="p-4 active:bg-blue-300">Mesa 10</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón descripción debajo de la barra mesa -->
+  <div class="mb-4 w-full max-w-md mx-auto">
+    <button onclick="toggleDescripcion()" id="descripcionBtn"
+      class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl active:scale-95 transition">
+      Descripción mesa
+    </button>
+
+    <div id="descripcionBox" class="hidden mt-2">
+      <div class="flex gap-2">
+        <textarea id="descripcionText" placeholder="¿A qué suena tu mesa?" class="flex-1 p-3 rounded bg-gray-900 text-white" rows="3"></textarea>
+        <button onclick="confirmarDescripcion()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+      </div>
+      <div id="descripcionGuardada" class="text-sm text-gray-300 mt-2 hidden"></div>
+    </div>
+  </div>
+
+  <!-- Botones de categorías lado a lado -->
+  <div class="flex gap-4 justify-center mt-4 mb-4">
+    <button onclick="toggleHamburguesas()"
+      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+             active:scale-90 transition">
+      🍔
+    </button>
+
+    <button onclick="toggleCombos()"
+      class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center
+             active:scale-90 transition">
+      <div class="text-center text-2xl leading-none flex flex-col items-center">
+        <div>🍟</div>
+        <div class="flex gap-1">
+          <div>🍔</div>
+          <div>🍹</div>
+        </div>
+      </div>
+    </button>
+
+    <button onclick="togglePapasForm()"
+      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+             active:scale-90 transition">
+      🍟
+    </button>
+
+    <button onclick="toggleBebidas()"
+      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+             active:scale-90 transition">
+      🍹
+    </button>
+  </div>
+
+  <!-- Menú hamburguesas -->
+  <div id="menuHamburguesas"
+    class="hidden mt-4 space-y-3">
+
+    <button id="btnSencilla"
+      onclick="handleClickSencilla(event)"
+      onmousedown="activarPersonalizacionSencilla()"
+      onmouseup="cancelarPersonalizacionSencilla()"
+      onmouseleave="cancelarPersonalizacionSencilla()"
+      ontouchstart="activarPersonalizacionSencilla()"
+      ontouchend="cancelarPersonalizacionSencilla()"
+      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+      Sencilla — $60
+    </button>
+
+    <!-- Personalización larga: Sencilla -->
+    <div id="personalSencillaBox" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="mb-2">
+        <input id="sencillaPersonalInput" placeholder="¿Que llevará la hamburguesa del cliente?" class="w-full p-2 rounded bg-gray-900 text-white placeholder-gray-400">
+      </div>
+      <div class="text-right">
+        <button onclick="confirmarPersonalizacionSencilla()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+      </div>
+    </div>
+
+    <button id="btnHawaiiana"
+      onclick="handleClickHawaiiana(event)"
+      onmousedown="activarPersonalizacionHawaiiana()"
+      onmouseup="cancelarPersonalizacionHawaiiana()"
+      onmouseleave="cancelarPersonalizacionHawaiiana()"
+      ontouchstart="activarPersonalizacionHawaiiana()"
+      ontouchend="cancelarPersonalizacionHawaiiana()"
+      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+      Hawaiiana — $75
+    </button>
+
+    <div id="personalHawaiianaBox" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="mb-2">
+        <input id="hawaiianaPersonalInput" placeholder="¿Que llevará la hamburguesa del cliente?" class="w-full p-2 rounded bg-gray-900 text-white placeholder-gray-400">
+      </div>
+      <div class="text-right">
+        <button onclick="confirmarPersonalizacionHawaiiana()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+      </div>
+    </div>
+
+    <button id="btnEspecial"
+      onclick="handleClickEspecial(event)"
+      onmousedown="activarPersonalizacionEspecial()"
+      onmouseup="cancelarPersonalizacionEspecial()"
+      onmouseleave="cancelarPersonalizacionEspecial()"
+      ontouchstart="activarPersonalizacionEspecial()"
+      ontouchend="cancelarPersonalizacionEspecial()"
+      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+      Especial — $90
+    </button>
+
+    <div id="personalEspecialBox" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="mb-2">
+        <input id="especialPersonalInput" placeholder="¿Que llevará la hamburguesa del cliente?" class="w-full p-2 rounded bg-gray-900 text-white placeholder-gray-400">
+      </div>
+      <div class="text-right">
+        <button onclick="confirmarPersonalizacionEspecial()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú Combos -->
+  <div id="menuCombos" class="hidden mt-4 space-y-3">
+    <!-- Combo Sencilla -->
+    <div class="flex gap-2">
+      <button onclick="abrirCombo('Combo Sencilla',100)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Sencilla — $100
+      </button>
+      <div class="relative">
+        <select id="cantidadComboSencilla" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Combo Hawaiiana -->
+    <div class="flex gap-2">
+      <button onclick="abrirCombo('Combo Hawaiiana',115)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Hawaiiana — $115
+      </button>
+      <div class="relative">
+        <select id="cantidadComboHawaiiana" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Combo Especial -->
+    <div class="flex gap-2">
+      <button onclick="abrirCombo('Combo Especial',130)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Especial — $130
+      </button>
+      <div class="relative">
+        <select id="cantidadComboEspecial" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Formulario de personalización del combo -->
+    <div id="comboForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🍔 Hamburguesa:</label>
+        <div class="flex gap-2">
+          <input id="hamburguesiInput" placeholder="¿Qué llevará tu hamburguesa?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarHamburguesa()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🍟Papas:</label>
+        <div class="flex gap-2">
+          <input id="papasInput" placeholder="¿Qué llevarán (o no) las papas del cliente?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarPapas()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">¿Alguna consideración?</label>
+        <div class="flex gap-2 mb-2">
+          <button id="bebidaJ" onclick="seleccionarBebida('Jamaica')" class="px-3 py-2 bg-gray-700 rounded">Jamaica</button>
+          <button id="bebidaH" onclick="seleccionarBebida('Horchata')" class="px-3 py-2 bg-gray-700 rounded">Horchata</button>
+        </div>
+        <div class="flex gap-2">
+          <input id="bebidaInput" placeholder="Sin hielo, mucho hielo, con limón, etc." class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarBebida()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="text-right">
+        <button onclick="confirmarCombo()" class="px-4 py-2 bg-green-600 rounded">Confirmar combo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario de papas solas -->
+  <!-- Menú Bebidas solas -->
+  <div id="menuBebidas" class="hidden mt-4 space-y-3">
+    <button onclick="agregarProducto('Jamaica',30)"
+      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+      Jamaica — $30
+    </button>
+
+    <button onclick="agregarProducto('Horchata',30)"
+      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+      Horchata — $30
+    </button>
+  </div>
+
+  <div id="papasForm" class="hidden mt-4 p-4 bg-gray-800 rounded-xl">
+    <label class="text-sm mb-2 block font-semibold">¿Qué llevan las papas?</label>
+    <div class="flex gap-2">
+      <input id="papasPersonalizacionInput" placeholder="salsa, queso, mostaza, catsup, etc" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+      <button onclick="confirmarPapasSolas()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+    </div>
+  </div>
+
+  <!-- Carrito -->
+  <div class="mt-6">
+    <h3 class="text-xl font-bold mb-2">Carrito</h3>
+    <ul id="carrito" class="text-gray-300 space-y-1"></ul>
+    <p class="mt-2 font-bold">Total: $<span id="total">0</span></p>
+  </div>
+
+  <!-- Chisme clientil -->
+  <div class="mt-4">
+    <textarea id="chismeClientil" placeholder="Aquí va el chisme clientil, más especificaciones, exclusiones etc." class="w-full p-3 rounded bg-gray-800 text-white placeholder-gray-400 text-sm" rows="3"></textarea>
+  </div>
+
+  <!-- Botón borrar último elemento -->
+  <button onclick="borrarUltimo()"
+    class="mt-4 w-full max-w-md bg-red-600 py-4 rounded-xl active:scale-95 transition">
+    Borrar elemento
+  </button>
+
+  <!-- Botón vaciar carrito (pulsación larga 1.2s) -->
+  <button id="vaciarCarritoBtn"
+    onmousedown="activarVaciarCarrito()"
+    onmouseup="cancelarVaciarCarrito()"
+    onmouseleave="cancelarVaciarCarrito()"
+    ontouchstart="activarVaciarCarrito()"
+    ontouchend="cancelarVaciarCarrito()"
+    class="mt-2 w-full max-w-md bg-red-600 py-4 rounded-xl active:scale-95 transition">
+    Vaciar carrito 1.2s
+  </button>
+
+  <!-- Botón finalizar -->
+  <button id="finalizarBtn"
+    onmousedown="activarFinalizar()"
+    onmouseup="cancelarFinalizar()"
+    ontouchstart="activarFinalizar()"
+    ontouchend="cancelarFinalizar()"
+    class="fixed bottom-4 right-4 bg-green-700 px-6 py-4 rounded-full
+           opacity-50">
+    Finalizar
+  </button>
+
+  <!-- Volver -->
+  <button onclick="volverAMenu()"
+    class="mt-auto bg-gray-700 py-4 rounded-xl active:scale-90 transition">
+    Volver al menú
+  </button>
+</section>
+
+<!-- ================= ÓRDENES ================= -->
+<section id="menuOrdenes"
+  class="hidden min-h-screen flex flex-col px-4 pt-4 pb-24">
+
+  <!-- Total del día -->
+  <div class="bg-green-700 text-white p-4 rounded-xl mb-4 text-center">
+    <div class="text-sm">Total del día</div>
+    <div class="text-3xl font-bold">$<span id="totalDelDia">0</span></div>
+  </div>
+
+  <!-- Grid de órdenes -->
+  <div id="gridOrdenes" class="grid grid-cols-2 gap-4 overflow-y-auto flex-1 pb-4">
+  </div>
+
+  <!-- Botón borrar órdenes -->
+  <button id="btnBorrarOrdenes"
+    onmousedown="activarBorrarOrdenes()"
+    onmouseup="cancelarBorrarOrdenes()"
+    ontouchstart="activarBorrarOrdenes()"
+    ontouchend="cancelarBorrarOrdenes()"
+    class="w-full bg-red-600 py-4 rounded-xl font-bold active:scale-95 transition">
+    Borrar todas las órdenes (5s)
+  </button>
+
+  <!-- Volver -->
+  <button onclick="volverAMenu()"
+    class="mt-4 bg-gray-700 py-4 rounded-xl active:scale-90 transition">
+    Volver al menú
+  </button>
+</section>
+
+<!-- Modal de detalles de orden -->
+<div id="modalDetalles" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+  <div class="bg-white text-gray-900 rounded-xl p-6 max-w-md w-full max-h-96 overflow-y-auto">
+    <div id="detallesContenido"></div>
+    
+    <!-- Observación -->
+    <div id="seccionObservacion" class="mt-4 p-3 bg-gray-100 rounded-xl hidden">
+      <label class="text-sm font-semibold block mb-2">Observación:</label>
+      <div class="flex gap-2">
+        <textarea id="textareaObservacion" placeholder="Agregar observación..." class="flex-1 p-2 rounded bg-white text-gray-900 text-sm" rows="2"></textarea>
+        <button onclick="confirmarObservacion()" class="px-3 py-2 bg-green-600 text-white rounded font-semibold">Confirmar</button>
+      </div>
+      <div id="observacionGuardada" class="text-xs text-gray-600 mt-2 hidden"></div>
+    </div>
+    
+    <div id="botonesDetalles" class="mt-4 space-y-2">
+      <div class="flex gap-2">
+        <button id="btnAgregarProductos" onclick="abrirModoEdicion()" class="flex-1 bg-orange-500 text-white py-2 rounded-xl hidden">Agregar productos</button>
+        <button onclick="cerrarDetalles()" class="flex-1 bg-blue-600 text-white py-2 rounded-xl">Cerrar</button>
+      </div>
+      
+      <!-- Botones de edición en el modal -->
+      <div id="botonesEdicionModal" class="hidden space-y-2">
+        <!-- Botón rescatar producto -->
+        <button id="btnRescatarProducto" onclick="rescatarProducto()"
+          class="w-full bg-gray-500 text-white py-2 rounded-xl active:scale-95 transition">
+          ⏪ Rescatar
+        </button>
+
+        <!-- Botón cancelar orden -->
+        <button id="btnCancelarOrden"
+          onmousedown="activarCancelarOrden()"
+          onmouseup="cancelarCancelarOrden()"
+          ontouchstart="activarCancelarOrden()"
+          ontouchend="cancelarCancelarOrden()"
+          class="w-full bg-red-700 text-white py-2 rounded-xl active:scale-95 transition">
+          Cancelar orden (2s)
+        </button>
+
+        <!-- Botón pagado -->
+        <button id="btnPagadoOrden"
+          onmousedown="activarPagadoOrden()"
+          onmouseup="cancelarPagadoOrden()"
+          ontouchstart="activarPagadoOrden()"
+          ontouchend="cancelarPagadoOrden()"
+          class="w-full bg-green-600 text-white py-2 rounded-xl active:scale-95 transition">
+          Pagado (1.2s)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
