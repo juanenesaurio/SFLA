@@ -564,9 +564,12 @@ function activarFinalizar() {
     
     alert(mensaje);
     guardarOrdenesLocal();
-    
     limpiarFormulario();
-    irAMenu();
+    if (ordenEnEdicion !== null) {
+      irAOrdenes();
+    } else {
+      irAMenu();
+    }
   }, 1200);
 }
 
@@ -794,17 +797,21 @@ function eliminarProductoDeOrden(ordenIndice, productoIndice) {
       productosEliminados.push(orden.productos[productoIndice]);
     }
     orden.productos.splice(productoIndice, 1);
-    
+
     // Recalcular total de la orden
     let nuevoTotal = 0;
     orden.productos.forEach(prod => {
       nuevoTotal += prod.precio;
     });
     orden.total = nuevoTotal;
-    
-    // Marcar como editada con color amarillo
+
+    // Marcar como editada con color amarillo y registrar hora de edición
+    if (!orden.editadoHoraPrimera) {
+      orden.editadoHoraPrimera = new Date().toLocaleTimeString();
+    }
+    orden.editadoHoraUltima = new Date().toLocaleTimeString();
     orden.estado = 'editada';
-    
+
     guardarOrdenesLocal();
     mostrarDetallesOrden(ordenIndice);
     renderOrdenes();
