@@ -675,9 +675,6 @@ function mostrarDetallesOrden(indice) {
     }
     html += `<div class=\"text-sm mb-2 font-semibold ${colorEstado}\">Estado: ${orden.estado.toUpperCase()}${horaEditado}</div>`;
   }
-    }
-    html += `<div class="text-sm mb-2 font-semibold ${colorEstado}">Estado: ${orden.estado.toUpperCase()}${horaEditado}</div>`;
-  }
   html += `<div class="text-sm mb-2"><strong>Mesa:</strong> ${orden.mesa || 'N/A'}</div>`;
   html += `<div class="text-sm mb-2"><strong>Descripción:</strong> ${orden.descripcion || 'N/A'}</div>`;
   if (orden.chisme) {
