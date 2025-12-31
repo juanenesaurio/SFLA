@@ -537,8 +537,13 @@ function activarFinalizar() {
       orden.mesa = mesaNum || orden.mesa;
       orden.descripcion = mesaDescripcion || orden.descripcion;
       orden.chisme = chismeClientil;
-      orden.estado = 'editada'; // Marcar como editada
       orden.usuario = usuarioActual;
+      // Si es la primera vez que se edita, guarda la hora de la primera edición
+      if (!orden.editadoHoraPrimera) {
+        orden.editadoHoraPrimera = new Date().toLocaleTimeString();
+      }
+      orden.editadoHoraUltima = new Date().toLocaleTimeString();
+      orden.estado = 'editada'; // Marcar como editada
       mensaje = "Cambios guardados\n" + mensaje;
     } else {
       // Modo nuevo: crear nueva orden
@@ -657,9 +662,6 @@ function mostrarDetallesOrden(indice) {
   ordenEnModalActual = indice;
   
   let html = `<div class="text-lg font-bold mb-3">Orden #${orden.id}</div>`;
-  if (orden.usuario) {
-    html += `<div class=\"text-xs text-gray-400 mb-2\"><strong>Usuario:</strong> ${orden.usuario}</div>`;
-  }
   if (orden.estado) {
     let colorEstado = 'text-red-600';
     if (orden.estado === 'pagada') {
@@ -667,7 +669,14 @@ function mostrarDetallesOrden(indice) {
     } else if (orden.estado === 'editada') {
       colorEstado = 'text-yellow-600';
     }
-    html += `<div class="text-sm mb-2 font-semibold ${colorEstado}">Estado: ${orden.estado.toUpperCase()}</div>`;
+    let horaEditado = '';
+    if (orden.estado === 'editada' && orden.editadoHoraPrimera) {
+      horaEditado = ` <span class='text-xs text-gray-500'>(primera edición: ${orden.editadoHoraPrimera}${orden.editadoHoraUltima && orden.editadoHoraUltima !== orden.editadoHoraPrimera ? `, última: ${orden.editadoHoraUltima}` : ''})</span>`;
+    }
+    html += `<div class=\"text-sm mb-2 font-semibold ${colorEstado}\">Estado: ${orden.estado.toUpperCase()}${horaEditado}</div>`;
+  }
+    }
+    html += `<div class="text-sm mb-2 font-semibold ${colorEstado}">Estado: ${orden.estado.toUpperCase()}${horaEditado}</div>`;
   }
   html += `<div class="text-sm mb-2"><strong>Mesa:</strong> ${orden.mesa || 'N/A'}</div>`;
   html += `<div class="text-sm mb-2"><strong>Descripción:</strong> ${orden.descripcion || 'N/A'}</div>`;
