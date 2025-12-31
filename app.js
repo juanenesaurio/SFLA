@@ -26,9 +26,32 @@ function inicializarOrdenes() {
   }
 }
 
+
 /* guardar órdenes en localStorage */
 function guardarOrdenesLocal() {
   localStorage.setItem('ordenesDelDia', JSON.stringify(ordenesDelDia));
+}
+
+// Modificar función de finalizar orden para guardar usuario
+function finalizarOrden() {
+  if (!usuarioActual) {
+    alert('Selecciona un usuario antes de crear una orden.');
+    return;
+  }
+  // ...existing code...
+  const nuevaOrden = {
+    // ...otros campos de la orden...
+    usuario: usuarioActual,
+    // ...existing code...
+  };
+  // ...agregar a ordenesDelDia y guardar...
+}
+
+// Mostrar usuario en la visualización de órdenes
+function renderOrden(orden) {
+  // ...existing code...
+  const usuario = orden.usuario ? `<div class="text-xs text-gray-400">${orden.usuario}</div>` : '';
+  // ...insertar usuario en el HTML de la orden...
 }
 
 // Ejecutar al cargar la página
@@ -41,8 +64,28 @@ function ocultarTodo() {
   );
 }
 
+
+let usuarioActual = null;
+
 function irAMenu() {
   ocultarTodo();
+  // Si no hay usuario seleccionado, mostrar barra de usuarios
+  if (!usuarioActual) {
+    document.getElementById("barraUsuarios").classList.remove("hidden");
+  } else {
+    document.getElementById("menuPrincipal").classList.remove("hidden");
+  }
+}
+
+function toggleUsuarios() {
+  document.getElementById("listaUsuarios").classList.toggle("open");
+}
+
+function seleccionarUsuario(nombre) {
+  usuarioActual = nombre;
+  document.getElementById("usuarioSeleccionado").innerText = nombre;
+  document.getElementById("listaUsuarios").classList.remove("open");
+  document.getElementById("barraUsuarios").classList.add("hidden");
   document.getElementById("menuPrincipal").classList.remove("hidden");
 }
 
@@ -487,6 +530,7 @@ function activarFinalizar() {
       orden.descripcion = mesaDescripcion || orden.descripcion;
       orden.chisme = chismeClientil;
       orden.estado = 'editada'; // Marcar como editada
+      orden.usuario = usuarioActual;
       mensaje = "Cambios guardados\n" + mensaje;
     } else {
       // Modo nuevo: crear nueva orden
@@ -499,7 +543,8 @@ function activarFinalizar() {
         timestamp: new Date().toLocaleTimeString(),
         estado: null, // Nueva orden sin estado
         observacion: '', // Nueva orden sin observación
-        chisme: chismeClientil // Guardar chisme clientil
+        chisme: chismeClientil, // Guardar chisme clientil
+        usuario: usuarioActual // Guardar usuario
       };
       ordenesDelDia.push(ordenGuardada);
     }
@@ -568,22 +613,21 @@ function renderOrdenes() {
   ordenesDelDia.forEach(orden => {
     sumaTotal += orden.total;
     const tarjeta = document.createElement("div");
-    
     // Determinar color según estado
     let colorClase = "bg-white";
     if (orden.estado === 'editada') {
-      colorClase = "bg-yellow-200"; // Amarillo claro
+      colorClase = "bg-yellow-200";
     } else if (orden.estado === 'cancelada') {
-      colorClase = "bg-red-200"; // Rojo claro
+      colorClase = "bg-red-200";
     } else if (orden.estado === 'pagada') {
-      colorClase = "bg-green-200"; // Verde claro
+      colorClase = "bg-green-200";
     }
-    
     tarjeta.className = `${colorClase} text-gray-900 p-4 rounded-xl cursor-pointer hover:shadow-lg transition`;
     tarjeta.onclick = () => mostrarDetallesOrden(orden.id - 1);
     tarjeta.innerHTML = `
       <div class="text-sm font-semibold">Mesa ${orden.mesa || 'N/A'}</div>
       <div class="text-xs text-gray-500">${orden.timestamp}</div>
+      <div class="text-xs text-gray-400">${orden.usuario ? orden.usuario : ''}</div>
       <div class="mt-2 font-bold text-lg">$${orden.total}</div>
       ${orden.estado ? `<div class="text-xs mt-1 font-semibold uppercase">${orden.estado}</div>` : ''}
     `;
@@ -605,28 +649,26 @@ function mostrarDetallesOrden(indice) {
   ordenEnModalActual = indice;
   
   let html = `<div class="text-lg font-bold mb-3">Orden #${orden.id}</div>`;
-  
+  if (orden.usuario) {
+    html += `<div class=\"text-xs text-gray-400 mb-2\"><strong>Usuario:</strong> ${orden.usuario}</div>`;
+  }
   if (orden.estado) {
-    let colorEstado = 'text-red-600'; // Por defecto rojo
+    let colorEstado = 'text-red-600';
     if (orden.estado === 'pagada') {
-      colorEstado = 'text-green-600'; // Verde si está pagada
+      colorEstado = 'text-green-600';
     } else if (orden.estado === 'editada') {
-      colorEstado = 'text-yellow-600'; // Amarillo si está editada
+      colorEstado = 'text-yellow-600';
     }
     html += `<div class="text-sm mb-2 font-semibold ${colorEstado}">Estado: ${orden.estado.toUpperCase()}</div>`;
   }
-  
   html += `<div class="text-sm mb-2"><strong>Mesa:</strong> ${orden.mesa || 'N/A'}</div>`;
   html += `<div class="text-sm mb-2"><strong>Descripción:</strong> ${orden.descripcion || 'N/A'}</div>`;
-  
   if (orden.chisme) {
     html += `<div class="text-sm mb-2"><strong>Chisme:</strong> ${orden.chisme}</div>`;
   }
-  
   if (orden.observacion) {
     html += `<div class="text-sm mb-2"><strong>Observación:</strong> ${orden.observacion}</div>`;
   }
-  
   html += `<div class="text-sm mb-2"><strong>Hora:</strong> ${orden.timestamp}</div>`;
   html += `<div class="text-sm font-semibold mb-3">Productos:</div>`;
   

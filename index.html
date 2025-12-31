@@ -40,6 +40,21 @@
   </button>
 </section>
 
+<!-- ================= BARRA USUARIOS ================= -->
+<section id="barraUsuarios" class="hidden min-h-screen flex flex-col items-center justify-center gap-6 px-6">
+  <div class="w-full max-w-md">
+    <button id="usuarioDropdownBtn" onclick="toggleUsuarios()" class="w-full bg-gray-700 py-4 rounded-xl text-xl font-semibold flex justify-between items-center">
+      <span id="usuarioSeleccionado">¿Quién eres?</span>
+      <span class="ml-2">▼</span>
+    </button>
+    <div id="listaUsuarios" class="dropdown bg-gray-800 rounded-xl mt-2 w-full">
+      <button onclick="seleccionarUsuario('Arina de Hifas')" class="w-full text-left p-4 hover:bg-gray-600">Arina de Hifas</button>
+      <button onclick="seleccionarUsuario('Joangus 45')" class="w-full text-left p-4 hover:bg-gray-600">Joangus 45</button>
+      <button onclick="seleccionarUsuario('Juanene polloloko')" class="w-full text-left p-4 hover:bg-gray-600">Juanene polloloko</button>
+    </div>
+  </div>
+</section>
+
 <!-- ================= MENU PRINCIPAL ================= -->
 <section id="menuPrincipal"
   class="hidden min-h-screen flex flex-col items-center justify-center gap-6 px-6">
@@ -461,6 +476,6 @@
   </div>
 </div>
 
-<script src="app.js"></script>
+<<script type="module" src="app.js"></script>
 </body>
 </html>
