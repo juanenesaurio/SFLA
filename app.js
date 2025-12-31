@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', inicializarOrdenes);
 
 /* navegación */
 function ocultarTodo() {
-  ["bienvenida","menuPrincipal","nuevaOrden","menuOrdenes"].forEach(id =>
+  ["bienvenida","menuPrincipal","nuevaOrden","menuOrdenes","barraUsuarios"].forEach(id =>
     document.getElementById(id).classList.add("hidden")
   );
 }
