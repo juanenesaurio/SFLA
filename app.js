@@ -81,11 +81,19 @@ function toggleUsuarios() {
   document.getElementById("listaUsuarios").classList.toggle("open");
 }
 
+
 function seleccionarUsuario(nombre) {
   usuarioActual = nombre;
   document.getElementById("usuarioSeleccionado").innerText = nombre;
   document.getElementById("listaUsuarios").classList.remove("open");
   document.getElementById("barraUsuarios").classList.add("hidden");
+  // Mostrar bienvenida personalizada
+  document.getElementById("mensajeBienvenidaUsuario").innerText = `Hora de chambear (${nombre}) suerte 🧙🏻‍♂️`;
+  document.getElementById("bienvenidaUsuario").classList.remove("hidden");
+}
+
+function continuarMenuPrincipal() {
+  document.getElementById("bienvenidaUsuario").classList.add("hidden");
   document.getElementById("menuPrincipal").classList.remove("hidden");
 }
 

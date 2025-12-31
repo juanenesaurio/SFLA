@@ -55,6 +55,15 @@
   </div>
 </section>
 
+<!-- ================= BIENVENIDA USUARIO ================= -->
+<section id="bienvenidaUsuario" class="hidden min-h-screen flex flex-col items-center justify-center gap-6 px-6">
+  <div class="w-full max-w-md bg-gray-800 border border-gray-600 rounded-3xl p-8 text-xl font-semibold text-center">
+    <span id="mensajeBienvenidaUsuario"></span>
+    <br><br>
+    <button onclick="continuarMenuPrincipal()" class="mt-4 w-full bg-green-600 py-4 rounded-xl text-xl font-bold active:scale-95 transition">Continuar</button>
+  </div>
+</section>
+
 <!-- ================= MENU PRINCIPAL ================= -->
 <section id="menuPrincipal"
   class="hidden min-h-screen flex flex-col items-center justify-center gap-6 px-6">
@@ -356,12 +365,6 @@
   <div class="mt-4">
     <textarea id="chismeClientil" placeholder="Aquí va el chisme clientil, más especificaciones, exclusiones etc." class="w-full p-3 rounded bg-gray-800 text-white placeholder-gray-400 text-sm" rows="3"></textarea>
   </div>
-
-  <!-- Botón borrar último elemento -->
-  <button onclick="borrarUltimo()"
-    class="mt-4 w-full max-w-md bg-red-600 py-4 rounded-xl active:scale-95 transition">
-    Borrar elemento
-  </button>
 
   <!-- Botón vaciar carrito (pulsación larga 1.2s) -->
   <button id="vaciarCarritoBtn"
