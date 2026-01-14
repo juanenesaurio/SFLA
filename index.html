@@ -193,9 +193,15 @@
     </button>
 
     <button onclick="toggleCombosPeatos()"
-      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+      class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center
              active:scale-90 transition">
-      🌭
+      <div class="text-center text-2xl leading-none flex flex-col items-center">
+        <div>🌭</div>
+        <div class="flex gap-1">
+          <div>🍹</div>
+          <div>🍟</div>
+        </div>
+      </div>
     </button>
 
     <div class="w-20"></div>
@@ -564,7 +570,7 @@
     <div class="flex gap-2">
       <button onclick="abrirComboPeato('Combo perritos calientes',95)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        🌭🍹🍟 — $95
+        Combo perritos calientes — $95
       </button>
       <div class="relative">
         <select id="cantidadComboPerritos" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
