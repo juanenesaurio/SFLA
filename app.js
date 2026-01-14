@@ -274,9 +274,6 @@ function toggleBurritoSencillo() {
   document.getElementById("menuCombosPeatos").classList.add("hidden");
   document.getElementById("comboPeatoForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
-  document.getElementById("burritoPastorForm").classList.add("hidden");
-  document.getElementById("burritoChorizoForm").classList.add("hidden");
-  document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
   document.getElementById("perritoSencilloForm").classList.add("hidden");
   document.getElementById("perritoEspecialForm").classList.add("hidden");
@@ -288,7 +285,14 @@ function toggleBurritoSencillo() {
   if (ph) ph.classList.add('hidden');
   const pe = document.getElementById('personalEspecialBox');
   if (pe) pe.classList.add('hidden');
+  
+  // Toggle menu principal
   document.getElementById("menuBurritoSencillo").classList.toggle("hidden");
+  
+  // Ocultar formularios de personalización de burritos
+  document.getElementById("burritoPastorForm").classList.add("hidden");
+  document.getElementById("burritoChorizoForm").classList.add("hidden");
+  document.getElementById("burritoArracheraForm").classList.add("hidden");
 }
 
 function toggleCombos() {
@@ -437,8 +441,6 @@ function togglePerritosIndividuales() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
-  document.getElementById("perritoSencilloForm").classList.add("hidden");
-  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -447,7 +449,13 @@ function togglePerritosIndividuales() {
   if (ph) ph.classList.add('hidden');
   const pe = document.getElementById('personalEspecialBox');
   if (pe) pe.classList.add('hidden');
+  
+  // Toggle menu principal
   document.getElementById("menuPerritosIndividuales").classList.toggle("hidden");
+  
+  // Ocultar formularios de personalización de perritos
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
 }
 
 function abrirCombo(nombre, precio) {
