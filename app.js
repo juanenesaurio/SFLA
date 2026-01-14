@@ -239,6 +239,11 @@ function confirmarDescripcion() {
 
 /* hamburguesas */
 function toggleHamburguesas() {
+  console.log("toggleHamburguesas called");
+  const menu = document.getElementById("menuHamburguesas");
+  console.log("Menu element:", menu);
+  console.log("Menu classes before toggle:", menu.className);
+  
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
@@ -264,6 +269,7 @@ function toggleHamburguesas() {
   
   // Toggle menu principal
   document.getElementById("menuHamburguesas").classList.toggle("hidden");
+  console.log("Menu classes after toggle:", menu.className);
 }
 
 function toggleBurritoSencillo() {
