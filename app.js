@@ -25,6 +25,16 @@ let longPressTriggeredHawaiiana = false;
 let timerPersonalEspecial = null;
 let longPressTriggeredEspecial = false;
 let timerVaciarCarrito = null;
+let timerBurritoPastor = null;
+let longPressTriggeredBurritoPastor = false;
+let timerBurritoChorizo = null;
+let longPressTriggeredBurritoChorizo = false;
+let timerBurritoArrachera = null;
+let longPressTriggeredBurritoArrachera = false;
+let timerPerritoSencillo = null;
+let longPressTriggeredPerritoSencillo = false;
+let timerPerritoEspecial = null;
+let longPressTriggeredPerritoEspecial = false;
 
 /* inicializar órdenes del día desde localStorage */
 function inicializarOrdenes() {
@@ -240,6 +250,9 @@ function toggleHamburguesas() {
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -248,6 +261,7 @@ function toggleHamburguesas() {
   if (ph) ph.classList.add('hidden');
   const pe = document.getElementById('personalEspecialBox');
   if (pe) pe.classList.add('hidden');
+  document.getElementById("menuHamburguesas").classList.toggle("hidden");
   document.getElementById("menuHamburguesas").classList.toggle("hidden");
 }
 
@@ -856,23 +870,83 @@ function confirmarComboPeato() {
   selectedExtrasPeato = {};
 }
 
-function abrirBurritoSencillo(nombre, precio) {
-  // Ocultar todos los formularios de burrito
-  const forms = ['burritoPastorForm', 'burritoChorizoForm', 'burritoArracheraForm'];
-  forms.forEach(formId => {
-    const form = document.getElementById(formId);
-    if (form) form.classList.add('hidden');
-  });
-  
-  // Mostrar el formulario específico según el tipo
-  let formId = '';
-  if (nombre === 'Pastor') formId = 'burritoPastorForm';
-  else if (nombre === 'Chorizo') formId = 'burritoChorizoForm';
-  else if (nombre === 'Arrachera') formId = 'burritoArracheraForm';
-  
-  if (formId) {
-    document.getElementById(formId).classList.remove('hidden');
+/* Funciones para Burrito Individual con long-press */
+function activarPersonalizacionBurritoPastor() {
+  timerBurritoPastor = setTimeout(() => {
+    const box = document.getElementById('burritoPastorForm');
+    if (box) {
+      box.classList.remove('hidden');
+      const inp = document.getElementById('burritoPastorInput');
+      if (inp) inp.focus();
+    }
+    longPressTriggeredBurritoPastor = true;
+  }, 1200);
+}
+
+function cancelarPersonalizacionBurritoPastor() {
+  clearTimeout(timerBurritoPastor);
+  timerBurritoPastor = null;
+}
+
+function handleClickBurritoPastor(event) {
+  if (longPressTriggeredBurritoPastor) {
+    longPressTriggeredBurritoPastor = false;
+    event.preventDefault();
+    return;
   }
+  agregarProducto('Pastor', 28);
+}
+
+function activarPersonalizacionBurritoChorizo() {
+  timerBurritoChorizo = setTimeout(() => {
+    const box = document.getElementById('burritoChorizoForm');
+    if (box) {
+      box.classList.remove('hidden');
+      const inp = document.getElementById('burritoChorizoInput');
+      if (inp) inp.focus();
+    }
+    longPressTriggeredBurritoChorizo = true;
+  }, 1200);
+}
+
+function cancelarPersonalizacionBurritoChorizo() {
+  clearTimeout(timerBurritoChorizo);
+  timerBurritoChorizo = null;
+}
+
+function handleClickBurritoChorizo(event) {
+  if (longPressTriggeredBurritoChorizo) {
+    longPressTriggeredBurritoChorizo = false;
+    event.preventDefault();
+    return;
+  }
+  agregarProducto('Chorizo', 28);
+}
+
+function activarPersonalizacionBurritoArrachera() {
+  timerBurritoArrachera = setTimeout(() => {
+    const box = document.getElementById('burritoArracheraForm');
+    if (box) {
+      box.classList.remove('hidden');
+      const inp = document.getElementById('burritoArracheraInput');
+      if (inp) inp.focus();
+    }
+    longPressTriggeredBurritoArrachera = true;
+  }, 1200);
+}
+
+function cancelarPersonalizacionBurritoArrachera() {
+  clearTimeout(timerBurritoArrachera);
+  timerBurritoArrachera = null;
+}
+
+function handleClickBurritoArrachera(event) {
+  if (longPressTriggeredBurritoArrachera) {
+    longPressTriggeredBurritoArrachera = false;
+    event.preventDefault();
+    return;
+  }
+  agregarProducto('Arrachera', 30);
 }
 
 function confirmarBurritoIndividual(nombre, precio, inputId, formId) {
@@ -881,6 +955,78 @@ function confirmarBurritoIndividual(nombre, precio, inputId, formId) {
   
   agregarProducto(nombre, precio, {
     category: 'burrito_sencillo',
+    extras: extras
+  });
+  
+  // Limpiar y ocultar el formulario específico
+  document.getElementById(inputId).value = '';
+  document.getElementById(formId).classList.add('hidden');
+  
+  // Resetear flags
+  if (nombre === 'Pastor') longPressTriggeredBurritoPastor = false;
+  else if (nombre === 'Chorizo') longPressTriggeredBurritoChorizo = false;
+  else if (nombre === 'Arrachera') longPressTriggeredBurritoArrachera = false;
+}
+
+/* Funciones para Perrito Individual con long-press */
+function activarPersonalizacionPerritoSencillo() {
+  timerPerritoSencillo = setTimeout(() => {
+    const box = document.getElementById('perritoSencilloForm');
+    if (box) {
+      box.classList.remove('hidden');
+      const inp = document.getElementById('perritoSencilloInput');
+      if (inp) inp.focus();
+    }
+    longPressTriggeredPerritoSencillo = true;
+  }, 1200);
+}
+
+function cancelarPersonalizacionPerritoSencillo() {
+  clearTimeout(timerPerritoSencillo);
+  timerPerritoSencillo = null;
+}
+
+function handleClickPerritoSencillo(event) {
+  if (longPressTriggeredPerritoSencillo) {
+    longPressTriggeredPerritoSencillo = false;
+    event.preventDefault();
+    return;
+  }
+  agregarProducto('Sencillo', 20);
+}
+
+function activarPersonalizacionPerritoEspecial() {
+  timerPerritoEspecial = setTimeout(() => {
+    const box = document.getElementById('perritoEspecialForm');
+    if (box) {
+      box.classList.remove('hidden');
+      const inp = document.getElementById('perritoEspecialInput');
+      if (inp) inp.focus();
+    }
+    longPressTriggeredPerritoEspecial = true;
+  }, 1200);
+}
+
+function cancelarPersonalizacionPerritoEspecial() {
+  clearTimeout(timerPerritoEspecial);
+  timerPerritoEspecial = null;
+}
+
+function handleClickPerritoEspecial(event) {
+  if (longPressTriggeredPerritoEspecial) {
+    longPressTriggeredPerritoEspecial = false;
+    event.preventDefault();
+    return;
+  }
+  agregarProducto('Especial', 25);
+}
+
+function confirmarPerritoIndividual(nombre, precio, inputId, formId) {
+  const personalizacion = document.getElementById(inputId).value.trim();
+  const extras = personalizacion ? { perrito: personalizacion } : null;
+  
+  agregarProducto(nombre, precio, {
+    category: 'perrito_individual',
     extras: extras
   });
   
@@ -921,8 +1067,10 @@ function confirmarPerritoIndividual(nombre, precio, inputId, formId) {
   // Limpiar y ocultar el formulario específico
   document.getElementById(inputId).value = '';
   document.getElementById(formId).classList.add('hidden');
-  document.getElementById('menuPerritosIndividuales').classList.add('hidden');
-  renderCarrito();
+  
+  // Resetear flags
+  if (nombre === 'Sencillo') longPressTriggeredPerritoSencillo = false;
+  else if (nombre === 'Especial') longPressTriggeredPerritoEspecial = false;
 }
 
 /* carrito */

@@ -278,7 +278,13 @@
   <div id="menuBurritoSencillo" class="hidden mt-4 space-y-3">
     <!-- Pastor -->
     <div>
-      <button onclick="abrirBurritoSencillo('Pastor',28)"
+      <button
+        onclick="handleClickBurritoPastor(event)"
+        onmousedown="activarPersonalizacionBurritoPastor()"
+        onmouseup="cancelarPersonalizacionBurritoPastor()"
+        onmouseleave="cancelarPersonalizacionBurritoPastor()"
+        ontouchstart="activarPersonalizacionBurritoPastor()"
+        ontouchend="cancelarPersonalizacionBurritoPastor()"
         class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
         Pastor — $28
       </button>
@@ -295,7 +301,13 @@
 
     <!-- Chorizo -->
     <div>
-      <button onclick="abrirBurritoSencillo('Chorizo',28)"
+      <button
+        onclick="handleClickBurritoChorizo(event)"
+        onmousedown="activarPersonalizacionBurritoChorizo()"
+        onmouseup="cancelarPersonalizacionBurritoChorizo()"
+        onmouseleave="cancelarPersonalizacionBurritoChorizo()"
+        ontouchstart="activarPersonalizacionBurritoChorizo()"
+        ontouchend="cancelarPersonalizacionBurritoChorizo()"
         class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
         Chorizo — $28
       </button>
@@ -312,7 +324,13 @@
 
     <!-- Arrachera -->
     <div>
-      <button onclick="abrirBurritoSencillo('Arrachera',30)"
+      <button
+        onclick="handleClickBurritoArrachera(event)"
+        onmousedown="activarPersonalizacionBurritoArrachera()"
+        onmouseup="cancelarPersonalizacionBurritoArrachera()"
+        onmouseleave="cancelarPersonalizacionBurritoArrachera()"
+        ontouchstart="activarPersonalizacionBurritoArrachera()"
+        ontouchend="cancelarPersonalizacionBurritoArrachera()"
         class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
         Arrachera — $30
       </button>
@@ -332,7 +350,13 @@
   <div id="menuPerritosIndividuales" class="hidden mt-4 space-y-3">
     <!-- Sencillo -->
     <div>
-      <button onclick="abrirPerritoIndividual('Sencillo',20)"
+      <button
+        onclick="handleClickPerritoSencillo(event)"
+        onmousedown="activarPersonalizacionPerritoSencillo()"
+        onmouseup="cancelarPersonalizacionPerritoSencillo()"
+        onmouseleave="cancelarPersonalizacionPerritoSencillo()"
+        ontouchstart="activarPersonalizacionPerritoSencillo()"
+        ontouchend="cancelarPersonalizacionPerritoSencillo()"
         class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
         Sencillo — $20
       </button>
@@ -349,7 +373,13 @@
 
     <!-- Especial -->
     <div>
-      <button onclick="abrirPerritoIndividual('Especial',25)"
+      <button
+        onclick="handleClickPerritoEspecial(event)"
+        onmousedown="activarPersonalizacionPerritoEspecial()"
+        onmouseup="cancelarPersonalizacionPerritoEspecial()"
+        onmouseleave="cancelarPersonalizacionPerritoEspecial()"
+        ontouchstart="activarPersonalizacionPerritoEspecial()"
+        ontouchend="cancelarPersonalizacionPerritoEspecial()"
         class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
         Especial — $25
       </button>
