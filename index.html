@@ -127,7 +127,7 @@
   </div>
 
   <!-- Botones de categorías lado a lado -->
-  <div class="flex gap-4 justify-center mt-4 mb-4">
+  <div class="flex gap-4 justify-center mt-4 mb-4 flex-wrap">
     <button onclick="toggleHamburguesas()"
       class="w-20 h-20 bg-gray-700 rounded-full text-4xl
              active:scale-90 transition">
@@ -146,6 +146,21 @@
       </div>
     </button>
 
+    <button onclick="togglePapasForm()"
+      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+             active:scale-90 transition">
+      🍟
+    </button>
+
+    <button onclick="toggleBebidas()"
+      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+             active:scale-90 transition">
+      🍹
+    </button>
+  </div>
+
+  <!-- Segunda fila de botones -->
+  <div class="flex gap-4 justify-center mb-4 flex-wrap">
     <button onclick="toggleCombosBurrito()"
       class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center
              active:scale-90 transition">
@@ -158,16 +173,16 @@
       </div>
     </button>
 
-    <button onclick="togglePapasForm()"
-      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+    <button onclick="toggleCombosPeatos()"
+      class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center
              active:scale-90 transition">
-      🍟
-    </button>
-
-    <button onclick="toggleBebidas()"
-      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
-             active:scale-90 transition">
-      🍹
+      <div class="text-center text-2xl leading-none flex flex-col items-center">
+        <div>🌭</div>
+        <div class="flex gap-1">
+          <div>🍹</div>
+          <div>🍟</div>
+        </div>
+      </div>
     </button>
   </div>
 
@@ -447,6 +462,113 @@
 
       <div class="text-right">
         <button onclick="confirmarComboBurrito()" class="px-4 py-2 bg-green-600 rounded">Confirmar combo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú Combos Peatos (Perritos Calientes) -->
+  <div id="menuCombosPeatos" class="hidden mt-4 space-y-3">
+    <!-- Combo Peato Simple -->
+    <div class="flex gap-2">
+      <button onclick="abrirComboPeato('Combo Peato Simple',90)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Peato Simple — $90
+      </button>
+      <div class="relative">
+        <select id="cantidadComboPeatoSimple" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Combo Peato Premium -->
+    <div class="flex gap-2">
+      <button onclick="abrirComboPeato('Combo Peato Premium',105)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Peato Premium — $105
+      </button>
+      <div class="relative">
+        <select id="cantidadComboPeatoPremium" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Combo Peato Deluxe -->
+    <div class="flex gap-2">
+      <button onclick="abrirComboPeato('Combo Peato Deluxe',115)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Peato Deluxe — $115
+      </button>
+      <div class="relative">
+        <select id="cantidadComboPeatoDeluxe" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Formulario de personalización del combo peato -->
+    <div id="comboPeatoForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🌭 Perroto cachondo:</label>
+        <div class="flex gap-2">
+          <input id="peatoInput" placeholder="¿Que llevará tu perrito calientito?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🍟Papas:</label>
+        <div class="flex gap-2">
+          <input id="papasPeatoInput" placeholder="¿Que llevarán las papas?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarPapasPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🍹bebida</label>
+        <div class="flex gap-2 mb-2">
+          <button id="bebidaPeatoJ" onclick="seleccionarBebidaPeato('Jamaica')" class="px-3 py-2 bg-gray-700 rounded">Jamaica</button>
+          <button id="bebidaPeatoH" onclick="seleccionarBebidaPeato('Horchata')" class="px-3 py-2 bg-gray-700 rounded">Horchata</button>
+        </div>
+        <div class="flex gap-2">
+          <input id="bebidaPeatoInput" placeholder="¿De que tamaño será el agua?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarBebidaPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="text-right">
+        <button onclick="confirmarComboPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar combo</button>
       </div>
     </div>
   </div>
