@@ -9,6 +9,8 @@ let selectedComboPeato = null;
 let selectedExtrasPeato = {};
 let selectedBurritoSencillo = null;
 let selectedExtrasBurritoSencillo = {};
+let selectedPerritoIndividual = null;
+let selectedExtrasPerritoIndividual = {};
 let mesaDescripcion = '';
 let mesaNum = null;
 let ordenesDelDia = [];
@@ -255,6 +257,8 @@ function toggleBurritoSencillo() {
   document.getElementById("comboPeatoForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById("burritoSencilloForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoIndividualForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -276,6 +280,8 @@ function toggleCombos() {
   document.getElementById("comboPeatoForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoSencilloForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoIndividualForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -297,6 +303,8 @@ function toggleCombosBurrito() {
   document.getElementById("comboPeatoForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoSencilloForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoIndividualForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -317,6 +325,8 @@ function toggleCombosPeatos() {
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoSencilloForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoIndividualForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -338,6 +348,8 @@ function togglePapasForm() {
   document.getElementById("comboPeatoForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoSencilloForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoIndividualForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -359,6 +371,8 @@ function toggleBebidas() {
   document.getElementById("comboPeatoForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoSencilloForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoIndividualForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
   if (ps) ps.classList.add('hidden');
@@ -372,6 +386,29 @@ function toggleBebidas() {
   if (phBeb) phBeb.classList.add('hidden');
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.toggle("hidden");
+}
+
+function togglePerritosIndividuales() {
+  document.getElementById("menuHamburguesas").classList.add("hidden");
+  document.getElementById("menuCombos").classList.add("hidden");
+  document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("menuCombosBurrito").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
+  document.getElementById("menuCombosPeatos").classList.add("hidden");
+  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuBurritoSencillo").classList.add("hidden");
+  document.getElementById("burritoSencilloForm").classList.add("hidden");
+  document.getElementById("papasForm").classList.add("hidden");
+  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  const mb = document.getElementById("menuBebidas");
+  if (mb) mb.classList.add("hidden");
+  const ps = document.getElementById('personalSencillaBox');
+  if (ps) ps.classList.add('hidden');
+  const ph = document.getElementById('personalHawaiianaBox');
+  if (ph) ph.classList.add('hidden');
+  const pe = document.getElementById('personalEspecialBox');
+  if (pe) pe.classList.add('hidden');
+  document.getElementById("menuPerritosIndividuales").classList.toggle("hidden");
 }
 
 function abrirCombo(nombre, precio) {
