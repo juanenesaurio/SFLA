@@ -68,11 +68,12 @@ function ocultarTodo() {
 let usuarioActual = null;
 
 function irAMenu() {
-  ocultarTodo();
   // Si no hay usuario seleccionado, mostrar barra de usuarios
   if (!usuarioActual) {
+    ocultarTodo();
     document.getElementById("barraUsuarios").classList.remove("hidden");
   } else {
+    ocultarTodo();
     document.getElementById("menuPrincipal").classList.remove("hidden");
   }
 }
