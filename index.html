@@ -468,14 +468,14 @@
 
   <!-- Menú Combos Peatos (Perritos Calientes) -->
   <div id="menuCombosPeatos" class="hidden mt-4 space-y-3">
-    <!-- Combo Peato Simple -->
+    <!-- Orden Sencilla -->
     <div class="flex gap-2">
-      <button onclick="abrirComboPeato('Combo Peato Simple',90)"
+      <button onclick="abrirComboPeato('Orden sencilla',45)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        Combo Peato Simple — $90
+        Orden sencilla — $45
       </button>
       <div class="relative">
-        <select id="cantidadComboPeatoSimple" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+        <select id="cantidadOrdenSencilla" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
           <option value="1">x1</option>
           <option value="2">x2</option>
           <option value="3">x3</option>
@@ -491,14 +491,14 @@
       </div>
     </div>
 
-    <!-- Combo Peato Premium -->
+    <!-- Combo Perritos Calientes -->
     <div class="flex gap-2">
-      <button onclick="abrirComboPeato('Combo Peato Premium',105)"
+      <button onclick="abrirComboPeato('Combo perritos calientes',95)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        Combo Peato Premium — $105
+        Combo perritos calientes — $95
       </button>
       <div class="relative">
-        <select id="cantidadComboPeatoPremium" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+        <select id="cantidadComboPerritos" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
           <option value="1">x1</option>
           <option value="2">x2</option>
           <option value="3">x3</option>
@@ -514,14 +514,14 @@
       </div>
     </div>
 
-    <!-- Combo Peato Deluxe -->
+    <!-- Combo Especiales -->
     <div class="flex gap-2">
-      <button onclick="abrirComboPeato('Combo Peato Deluxe',115)"
+      <button onclick="abrirComboPeato('Combo especiales',110)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        Combo Peato Deluxe — $115
+        Combo especiales — $110
       </button>
       <div class="relative">
-        <select id="cantidadComboPeatoDeluxe" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+        <select id="cantidadComboEspeciales" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
           <option value="1">x1</option>
           <option value="2">x2</option>
           <option value="3">x3</option>
@@ -540,14 +540,14 @@
     <!-- Formulario de personalización del combo peato -->
     <div id="comboPeatoForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
       <div class="mb-3">
-        <label class="text-sm mb-2 block">🌭 Perroto cachondo:</label>
+        <label class="text-sm mb-2 block">🌭 Perrito cachondo:</label>
         <div class="flex gap-2">
-          <input id="peatoInput" placeholder="¿Que llevará tu perrito calientito?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <input id="peatoInput" placeholder="" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
           <button onclick="confirmarPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
         </div>
       </div>
 
-      <div class="mb-3">
+      <div id="seccionPapasPeato" class="mb-3 hidden">
         <label class="text-sm mb-2 block">🍟Papas:</label>
         <div class="flex gap-2">
           <input id="papasPeatoInput" placeholder="¿Que llevarán las papas?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
@@ -555,7 +555,7 @@
         </div>
       </div>
 
-      <div class="mb-3">
+      <div id="seccionBebidaPeato" class="mb-3 hidden">
         <label class="text-sm mb-2 block">🍹bebida</label>
         <div class="flex gap-2 mb-2">
           <button id="bebidaPeatoJ" onclick="seleccionarBebidaPeato('Jamaica')" class="px-3 py-2 bg-gray-700 rounded">Jamaica</button>

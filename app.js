@@ -144,12 +144,12 @@ function limpiarFormulario() {
   if (comboChorizo) comboChorizo.value = '1';
   const comboArrachera = document.getElementById('cantidadComboArrachera');
   if (comboArrachera) comboArrachera.value = '1';
-  const comboPeatoSimple = document.getElementById('cantidadComboPeatoSimple');
-  if (comboPeatoSimple) comboPeatoSimple.value = '1';
-  const comboPeatoPremium = document.getElementById('cantidadComboPeatoPremium');
-  if (comboPeatoPremium) comboPeatoPremium.value = '1';
-  const comboPeatoDeluxe = document.getElementById('cantidadComboPeatoDeluxe');
-  if (comboPeatoDeluxe) comboPeatoDeluxe.value = '1';
+  const ordenSencilla = document.getElementById('cantidadOrdenSencilla');
+  if (ordenSencilla) ordenSencilla.value = '1';
+  const comboPerritos = document.getElementById('cantidadComboPerritos');
+  if (comboPerritos) comboPerritos.value = '1';
+  const comboEspeciales = document.getElementById('cantidadComboEspeciales');
+  if (comboEspeciales) comboEspeciales.value = '1';
 
   const disp = document.getElementById('descripcionGuardada');
   if (disp) { 
@@ -668,17 +668,34 @@ function confirmarComboBurrito() {
 function abrirComboPeato(nombre, precio) {
   // Obtener la cantidad según el combo que se abrió
   let cantidadSeleccionada = 1;
-  if (nombre === 'Combo Peato Simple') {
-    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPeatoSimple').value);
-  } else if (nombre === 'Combo Peato Premium') {
-    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPeatoPremium').value);
-  } else if (nombre === 'Combo Peato Deluxe') {
-    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPeatoDeluxe').value);
+  if (nombre === 'Orden sencilla') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadOrdenSencilla').value);
+  } else if (nombre === 'Combo perritos calientes') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPerritos').value);
+  } else if (nombre === 'Combo especiales') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboEspeciales').value);
   }
   
   selectedComboPeato = { nombre, precio, cantidad: cantidadSeleccionada };
   selectedExtrasPeato = {};
   document.getElementById('comboPeatoForm').classList.remove('hidden');
+  
+  // Mostrar/ocultar secciones según el tipo de combo
+  const seccionPapas = document.getElementById('seccionPapasPeato');
+  const seccionBebida = document.getElementById('seccionBebidaPeato');
+  
+  if (nombre === 'Orden sencilla') {
+    // Solo mostrar el campo de perritos
+    seccionPapas.classList.add('hidden');
+    seccionBebida.classList.add('hidden');
+    document.getElementById('peatoInput').placeholder = '¿Que llevarán los perritos con tinder?';
+  } else {
+    // Mostrar todos los campos
+    seccionPapas.classList.remove('hidden');
+    seccionBebida.classList.remove('hidden');
+    document.getElementById('peatoInput').placeholder = '¿Que llevarán los perritos con tinder?';
+  }
+  
   document.getElementById('peatoInput').value = '';
   document.getElementById('peatoInput').disabled = false;
   document.getElementById('papasPeatoInput').value = '';
