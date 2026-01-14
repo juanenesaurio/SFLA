@@ -3,6 +3,8 @@ let timerFinalizar = null;
 let historial = [];
 let selectedCombo = null;
 let selectedExtras = {};
+let selectedComboBurrito = null;
+let selectedExtrasBurrito = {};
 let mesaDescripcion = '';
 let mesaNum = null;
 let ordenesDelDia = [];
@@ -134,6 +136,12 @@ function limpiarFormulario() {
   if (comboHawaiiana) comboHawaiiana.value = '1';
   const comboEspecial = document.getElementById('cantidadComboEspecial');
   if (comboEspecial) comboEspecial.value = '1';
+  const comboPastor = document.getElementById('cantidadComboPastor');
+  if (comboPastor) comboPastor.value = '1';
+  const comboChorizo = document.getElementById('cantidadComboChorizo');
+  if (comboChorizo) comboChorizo.value = '1';
+  const comboArrachera = document.getElementById('cantidadComboArrachera');
+  if (comboArrachera) comboArrachera.value = '1';
 
   const disp = document.getElementById('descripcionGuardada');
   if (disp) { 
@@ -148,6 +156,8 @@ function limpiarFormulario() {
   document.getElementById("menuHamburguesas").classList.add("hidden");
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("menuCombosBurrito").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById('bebidaJ').classList.remove('ring-2');
   document.getElementById('bebidaH').classList.remove('ring-2');
@@ -203,6 +213,8 @@ function confirmarDescripcion() {
 function toggleHamburguesas() {
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("menuCombosBurrito").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
@@ -219,6 +231,8 @@ function toggleCombos() {
   document.getElementById("menuHamburguesas").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("menuCombosBurrito").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -230,10 +244,29 @@ function toggleCombos() {
   document.getElementById("menuCombos").classList.toggle("hidden");
 }
 
+function toggleCombosBurrito() {
+  document.getElementById("menuHamburguesas").classList.add("hidden");
+  document.getElementById("menuCombos").classList.add("hidden");
+  document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("papasForm").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
+  const mb = document.getElementById("menuBebidas");
+  if (mb) mb.classList.add("hidden");
+  const ps = document.getElementById('personalSencillaBox');
+  if (ps) ps.classList.add('hidden');
+  const ph = document.getElementById('personalHawaiianaBox');
+  if (ph) ph.classList.add('hidden');
+  const pe = document.getElementById('personalEspecialBox');
+  if (pe) pe.classList.add('hidden');
+  document.getElementById("menuCombosBurrito").classList.toggle("hidden");
+}
+
 function togglePapasForm() {
   document.getElementById("menuHamburguesas").classList.add("hidden");
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("menuCombosBurrito").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -249,6 +282,8 @@ function toggleBebidas() {
   document.getElementById("menuHamburguesas").classList.add("hidden");
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("menuCombosBurrito").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
   if (ps) ps.classList.add('hidden');
@@ -515,6 +550,82 @@ function confirmarCombo() {
   selectedExtras = {};
 }
 
+/* Combos Burrito */
+function abrirComboBurrito(nombre, precio) {
+  // Obtener la cantidad según el combo que se abrió
+  let cantidadSeleccionada = 1;
+  if (nombre === 'Combo Pastor') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPastor').value);
+  } else if (nombre === 'Combo Chorizo') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboChorizo').value);
+  } else if (nombre === 'Combo Arrachera') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboArrachera').value);
+  }
+  
+  selectedComboBurrito = { nombre, precio, cantidad: cantidadSeleccionada };
+  selectedExtrasBurrito = {};
+  document.getElementById('comboBurritoForm').classList.remove('hidden');
+  document.getElementById('burritoInput').value = '';
+  document.getElementById('burritoInput').disabled = false;
+  document.getElementById('papasBurritoInput').value = '';
+  document.getElementById('papasBurritoInput').disabled = false;
+  document.getElementById('bebidaBurritoInput').value = '';
+  document.getElementById('bebidaBurritoInput').disabled = false;
+  document.getElementById('bebidaBurritoJ').classList.remove('ring-2');
+  document.getElementById('bebidaBurritoH').classList.remove('ring-2');
+}
+
+function confirmarBurrito() {
+  const burrito = document.getElementById('burritoInput').value.trim();
+  if (burrito) {
+    selectedExtrasBurrito.burrito = burrito;
+    document.getElementById('burritoInput').value = '✓ ' + burrito;
+    document.getElementById('burritoInput').disabled = true;
+  }
+}
+
+function confirmarPapasBurrito() {
+  const papas = document.getElementById('papasBurritoInput').value.trim();
+  if (papas) {
+    selectedExtrasBurrito.papas = papas;
+    document.getElementById('papasBurritoInput').value = '✓ ' + papas;
+    document.getElementById('papasBurritoInput').disabled = true;
+  }
+}
+
+function seleccionarBebidaBurrito(nombre) {
+  selectedExtrasBurrito.bebida = nombre;
+  document.getElementById('bebidaBurritoJ').classList.toggle('ring-2', nombre === 'Jamaica');
+  document.getElementById('bebidaBurritoH').classList.toggle('ring-2', nombre === 'Horchata');
+}
+
+function confirmarBebidaBurrito() {
+  const bebida = document.getElementById('bebidaBurritoInput').value.trim();
+  if (bebida) {
+    selectedExtrasBurrito.consideracion = bebida;
+    document.getElementById('bebidaBurritoInput').value = '✓ ' + bebida;
+    document.getElementById('bebidaBurritoInput').disabled = true;
+  }
+}
+
+function confirmarComboBurrito() {
+  if (!selectedComboBurrito) return;
+  
+  const cantidad = selectedComboBurrito.cantidad || 1;
+  
+  // Agregar el combo multiplicado por la cantidad
+  for (let i = 0; i < cantidad; i++) {
+    agregarProducto(selectedComboBurrito.nombre, selectedComboBurrito.precio, {
+      category: 'combo',
+      extras: Object.keys(selectedExtrasBurrito).length > 0 ? selectedExtrasBurrito : null
+    });
+  }
+  
+  document.getElementById('comboBurritoForm').classList.add('hidden');
+  selectedComboBurrito = null;
+  selectedExtrasBurrito = {};
+}
+
 /* carrito */
 function agregarProducto(nombre, precio, options) {
   const item = {
@@ -536,6 +647,7 @@ function renderCarrito() {
     if (item.extras) {
       const parts = [];
       if (item.extras.hamburguesa) parts.push(`Hamburguesa: ${item.extras.hamburguesa}`);
+      if (item.extras.burrito) parts.push(`Burrito: ${item.extras.burrito}`);
       if (item.extras.papas) parts.push(`Papas: ${item.extras.papas}`);
       if (item.extras.bebida) parts.push(`Bebida: ${item.extras.bebida}`);
       if (item.extras.consideracion) parts.push(`Nota: ${item.extras.consideracion}`);
@@ -740,6 +852,7 @@ function mostrarDetallesOrden(indice) {
       if (prod.extras) {
         const parts = [];
         if (prod.extras.hamburguesa) parts.push(`Hamburguesa: ${prod.extras.hamburguesa}`);
+        if (prod.extras.burrito) parts.push(`Burrito: ${prod.extras.burrito}`);
         if (prod.extras.papas) parts.push(`Papas: ${prod.extras.papas}`);
         if (prod.extras.bebida) parts.push(`Bebida: ${prod.extras.bebida}`);
         if (prod.extras.consideracion) parts.push(`Nota: ${prod.extras.consideracion}`);

@@ -146,6 +146,18 @@
       </div>
     </button>
 
+    <button onclick="toggleCombosBurrito()"
+      class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center
+             active:scale-90 transition">
+      <div class="text-center text-2xl leading-none flex flex-col items-center">
+        <div>🌯</div>
+        <div class="flex gap-1">
+          <div>🍹</div>
+          <div>🍟</div>
+        </div>
+      </div>
+    </button>
+
     <button onclick="togglePapasForm()"
       class="w-20 h-20 bg-gray-700 rounded-full text-4xl
              active:scale-90 transition">
@@ -328,6 +340,113 @@
 
       <div class="text-right">
         <button onclick="confirmarCombo()" class="px-4 py-2 bg-green-600 rounded">Confirmar combo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú Combos Burrito -->
+  <div id="menuCombosBurrito" class="hidden mt-4 space-y-3">
+    <!-- Combo Pastor -->
+    <div class="flex gap-2">
+      <button onclick="abrirComboBurrito('Combo Pastor',110)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Pastor — $110
+      </button>
+      <div class="relative">
+        <select id="cantidadComboPastor" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Combo Chorizo -->
+    <div class="flex gap-2">
+      <button onclick="abrirComboBurrito('Combo Chorizo',110)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Chorizo — $110
+      </button>
+      <div class="relative">
+        <select id="cantidadComboChorizo" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Combo Arrachera -->
+    <div class="flex gap-2">
+      <button onclick="abrirComboBurrito('Combo Arrachera',120)"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Combo Arrachera — $120
+      </button>
+      <div class="relative">
+        <select id="cantidadComboArrachera" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+          <option value="5">x5</option>
+          <option value="6">x6</option>
+          <option value="7">x7</option>
+          <option value="8">x8</option>
+          <option value="9">x9</option>
+          <option value="10">x10</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
+
+    <!-- Formulario de personalización del combo burrito -->
+    <div id="comboBurritoForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🌯 Burrito:</label>
+        <div class="flex gap-2">
+          <input id="burritoInput" placeholder="¿Que llevarán los burritos?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarBurrito()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🍟Papas:</label>
+        <div class="flex gap-2">
+          <input id="papasBurritoInput" placeholder="¿Que llevarán las papas?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarPapasBurrito()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="text-sm mb-2 block">🍹bebida</label>
+        <div class="flex gap-2 mb-2">
+          <button id="bebidaBurritoJ" onclick="seleccionarBebidaBurrito('Jamaica')" class="px-3 py-2 bg-gray-700 rounded">Jamaica</button>
+          <button id="bebidaBurritoH" onclick="seleccionarBebidaBurrito('Horchata')" class="px-3 py-2 bg-gray-700 rounded">Horchata</button>
+        </div>
+        <div class="flex gap-2">
+          <input id="bebidaBurritoInput" placeholder="¿De que tamaño será el agua?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarBebidaBurrito()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+        </div>
+      </div>
+
+      <div class="text-right">
+        <button onclick="confirmarComboBurrito()" class="px-4 py-2 bg-green-600 rounded">Confirmar combo</button>
       </div>
     </div>
   </div>
