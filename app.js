@@ -261,7 +261,8 @@ function toggleHamburguesas() {
   if (ph) ph.classList.add('hidden');
   const pe = document.getElementById('personalEspecialBox');
   if (pe) pe.classList.add('hidden');
-  document.getElementById("menuHamburguesas").classList.toggle("hidden");
+  
+  // Toggle menu principal
   document.getElementById("menuHamburguesas").classList.toggle("hidden");
 }
 
