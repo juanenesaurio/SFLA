@@ -746,7 +746,7 @@ function abrirComboPeato(nombre, precio) {
 function confirmarPeato() {
   const peato = document.getElementById('peatoInput').value.trim();
   if (peato) {
-    selectedExtrasPeato.peato = peato;
+    selectedExtrasPeato.perrito = peato;
     document.getElementById('peatoInput').value = '✓ ' + peato;
     document.getElementById('peatoInput').disabled = true;
   }
@@ -846,7 +846,7 @@ function renderCarrito() {
       const parts = [];
       if (item.extras.hamburguesa) parts.push(`Hamburguesa: ${item.extras.hamburguesa}`);
       if (item.extras.burrito) parts.push(`Burrito: ${item.extras.burrito}`);
-      if (item.extras.peato) parts.push(`Peato: ${item.extras.peato}`);
+      if (item.extras.perrito) parts.push(`Perrito: ${item.extras.perrito}`);
       if (item.extras.papas) parts.push(`Papas: ${item.extras.papas}`);
       if (item.extras.bebida) parts.push(`Bebida: ${item.extras.bebida}`);
       if (item.extras.consideracion) parts.push(`Nota: ${item.extras.consideracion}`);
