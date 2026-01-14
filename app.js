@@ -861,6 +861,36 @@ function confirmarBurritoSencillo() {
   renderCarrito();
 }
 
+function abrirPerritoIndividual(nombre, precio) {
+  selectedPerritoIndividual = { nombre, precio, cantidad: 1 };
+  selectedExtrasPerritoIndividual = {};
+  
+  // Mostrar el formulario
+  document.getElementById('perritoIndividualForm').classList.remove('hidden');
+  document.getElementById('perritoIndividualInput').value = '';
+  document.getElementById('perritoIndividualInput').disabled = false;
+}
+
+function confirmarPerritoIndividual() {
+  if (!selectedPerritoIndividual) return;
+  
+  const personalizacion = document.getElementById('perritoIndividualInput').value.trim();
+  if (personalizacion) {
+    selectedExtrasPerritoIndividual.perrito = personalizacion;
+  }
+  
+  agregarProducto(selectedPerritoIndividual.nombre, selectedPerritoIndividual.precio, {
+    category: 'perrito_individual',
+    extras: Object.keys(selectedExtrasPerritoIndividual).length > 0 ? selectedExtrasPerritoIndividual : null
+  });
+  
+  document.getElementById('perritoIndividualForm').classList.add('hidden');
+  document.getElementById('menuPerritosIndividuales').classList.add('hidden');
+  selectedPerritoIndividual = null;
+  selectedExtrasPerritoIndividual = {};
+  renderCarrito();
+}
+
 /* carrito */
 function agregarProducto(nombre, precio, options) {
   const item = {
