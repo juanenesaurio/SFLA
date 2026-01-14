@@ -264,7 +264,8 @@ function toggleBurritoSencillo() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
-  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -289,7 +290,8 @@ function toggleCombos() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
-  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -314,7 +316,8 @@ function toggleCombosBurrito() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
-  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -338,7 +341,8 @@ function toggleCombosPeatos() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
-  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -363,7 +367,8 @@ function togglePapasForm() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
-  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -388,7 +393,8 @@ function toggleBebidas() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
-  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
   if (ps) ps.classList.add('hidden');
@@ -417,7 +423,8 @@ function togglePerritosIndividuales() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
-  document.getElementById("perritoIndividualForm").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -885,32 +892,36 @@ function confirmarBurritoIndividual(nombre, precio, inputId, formId) {
 }
 
 function abrirPerritoIndividual(nombre, precio) {
-  selectedPerritoIndividual = { nombre, precio, cantidad: 1 };
-  selectedExtrasPerritoIndividual = {};
-  
-  // Mostrar el formulario
-  document.getElementById('perritoIndividualForm').classList.remove('hidden');
-  document.getElementById('perritoIndividualInput').value = '';
-  document.getElementById('perritoIndividualInput').disabled = false;
-}
-
-function confirmarPerritoIndividual() {
-  if (!selectedPerritoIndividual) return;
-  
-  const personalizacion = document.getElementById('perritoIndividualInput').value.trim();
-  if (personalizacion) {
-    selectedExtrasPerritoIndividual.perrito = personalizacion;
-  }
-  
-  agregarProducto(selectedPerritoIndividual.nombre, selectedPerritoIndividual.precio, {
-    category: 'perrito_individual',
-    extras: Object.keys(selectedExtrasPerritoIndividual).length > 0 ? selectedExtrasPerritoIndividual : null
+  // Ocultar todos los formularios de perrito
+  const forms = ['perritoSencilloForm', 'perritoEspecialForm'];
+  forms.forEach(formId => {
+    const form = document.getElementById(formId);
+    if (form) form.classList.add('hidden');
   });
   
-  document.getElementById('perritoIndividualForm').classList.add('hidden');
+  // Mostrar el formulario específico según el tipo
+  let formId = '';
+  if (nombre === 'Sencillo') formId = 'perritoSencilloForm';
+  else if (nombre === 'Especial') formId = 'perritoEspecialForm';
+  
+  if (formId) {
+    document.getElementById(formId).classList.remove('hidden');
+  }
+}
+
+function confirmarPerritoIndividual(nombre, precio, inputId, formId) {
+  const personalizacion = document.getElementById(inputId).value.trim();
+  const extras = personalizacion ? { perrito: personalizacion } : null;
+  
+  agregarProducto(nombre, precio, {
+    category: 'perrito_individual',
+    extras: extras
+  });
+  
+  // Limpiar y ocultar el formulario específico
+  document.getElementById(inputId).value = '';
+  document.getElementById(formId).classList.add('hidden');
   document.getElementById('menuPerritosIndividuales').classList.add('hidden');
-  selectedPerritoIndividual = null;
-  selectedExtrasPerritoIndividual = {};
   renderCarrito();
 }
 

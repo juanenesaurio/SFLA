@@ -330,23 +330,36 @@
 
   <!-- Menú Perritos Individuales -->
   <div id="menuPerritosIndividuales" class="hidden mt-4 space-y-3">
-    <button onclick="abrirPerritoIndividual('Sencillo',20)"
-      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-      Sencillo — $20
-    </button>
+    <!-- Sencillo -->
+    <div>
+      <button onclick="abrirPerritoIndividual('Sencillo',20)"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Sencillo — $20
+      </button>
+      <div id="perritoSencilloForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🌭 Perrito:</label>
+          <div class="flex gap-2">
+            <input id="perritoSencilloInput" placeholder="¿Que llevará el perrito calenturiento?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarPerritoIndividual('Sencillo', 20, 'perritoSencilloInput', 'perritoSencilloForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <button onclick="abrirPerritoIndividual('Especial',25)"
-      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-      Especial — $25
-    </button>
-
-    <!-- Formulario de personalización del perrito individual -->
-    <div id="perritoIndividualForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
-      <div class="mb-3">
-        <label class="text-sm mb-2 block">🌭 Perrito:</label>
-        <div class="flex gap-2">
-          <input id="perritoIndividualInput" placeholder="¿Que llevará tu perrito calenturiento?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-          <button onclick="confirmarPerritoIndividual()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+    <!-- Especial -->
+    <div>
+      <button onclick="abrirPerritoIndividual('Especial',25)"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Especial — $25
+      </button>
+      <div id="perritoEspecialForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🌭 Perrito:</label>
+          <div class="flex gap-2">
+            <input id="perritoEspecialInput" placeholder="¿Que llevará el perrito calenturiento?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarPerritoIndividual('Especial', 25, 'perritoEspecialInput', 'perritoEspecialForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
         </div>
       </div>
     </div>
