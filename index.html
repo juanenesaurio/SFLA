@@ -274,30 +274,55 @@
     </div>
   </div>
 
-  <!-- Menú Burrito Sencillo -->
+  <!-- Menú Burrito Individual -->
   <div id="menuBurritoSencillo" class="hidden mt-4 space-y-3">
-    <button onclick="abrirBurritoSencillo('Pastor',28)"
-      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-      Pastor — $28
-    </button>
+    <!-- Pastor -->
+    <div>
+      <button onclick="abrirBurritoSencillo('Pastor',28)"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Pastor — $28
+      </button>
+      <div id="burritoPastorForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🌯 Burrito:</label>
+          <div class="flex gap-2">
+            <input id="burritoPastorInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarBurritoIndividual('Pastor', 28, 'burritoPastorInput', 'burritoPastorForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <button onclick="abrirBurritoSencillo('Chorizo',28)"
-      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-      Chorizo — $28
-    </button>
+    <!-- Chorizo -->
+    <div>
+      <button onclick="abrirBurritoSencillo('Chorizo',28)"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Chorizo — $28
+      </button>
+      <div id="burritoChorizoForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🌯 Burrito:</label>
+          <div class="flex gap-2">
+            <input id="burritoChorizoInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarBurritoIndividual('Chorizo', 28, 'burritoChorizoInput', 'burritoChorizoForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <button onclick="abrirBurritoSencillo('Arrachera',30)"
-      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-      Arrachera — $30
-    </button>
-
-    <!-- Formulario de personalización del burrito sencillo -->
-    <div id="burritoSencilloForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
-      <div class="mb-3">
-        <label class="text-sm mb-2 block">🌯 Burrito:</label>
-        <div class="flex gap-2">
-          <input id="burritoSencilloInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-          <button onclick="confirmarBurritoSencillo()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+    <!-- Arrachera -->
+    <div>
+      <button onclick="abrirBurritoSencillo('Arrachera',30)"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Arrachera — $30
+      </button>
+      <div id="burritoArracheraForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🌯 Burrito:</label>
+          <div class="flex gap-2">
+            <input id="burritoArracheraInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarBurritoIndividual('Arrachera', 30, 'burritoArracheraInput', 'burritoArracheraForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
         </div>
       </div>
     </div>
