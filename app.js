@@ -342,6 +342,21 @@ function confirmarPapasSolas() {
   document.getElementById('papasForm').classList.add('hidden');
 }
 
+/* agregar bebida sola con tamaño seleccionado */
+function agregarBebidaSola(nombre) {
+  const selectId = 'tamaño' + nombre;
+  const select = document.getElementById(selectId);
+  const precio = parseInt(select.value);
+  const tamañoTexto = select.options[select.selectedIndex].text;
+  
+  // Agregar con el nombre completo incluyendo el tamaño
+  const nombreCompleto = `${nombre} (${tamañoTexto.split(' — ')[0]})`;
+  agregarProducto(nombreCompleto, precio, {
+    category: 'bebida',
+    extras: null
+  });
+}
+
 /* Personalización larga para Sencilla */
 function activarPersonalizacionSencilla() {
   timerPersonalSencilla = setTimeout(() => {

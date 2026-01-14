@@ -335,15 +335,35 @@
   <!-- Formulario de papas solas -->
   <!-- Menú Bebidas solas -->
   <div id="menuBebidas" class="hidden mt-4 space-y-3">
-    <button onclick="agregarProducto('Jamaica',30)"
-      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-      Jamaica — $30
-    </button>
+    <!-- Jamaica -->
+    <div class="flex gap-2">
+      <button onclick="agregarBebidaSola('Jamaica')"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Jamaica
+      </button>
+      <div class="relative">
+        <select id="tamañoJamaica" class="bg-purple-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="25">Medio litro — $25</option>
+          <option value="35">Litro — $35</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
 
-    <button onclick="agregarProducto('Horchata',30)"
-      class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-      Horchata — $30
-    </button>
+    <!-- Horchata -->
+    <div class="flex gap-2">
+      <button onclick="agregarBebidaSola('Horchata')"
+        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+        Horchata
+      </button>
+      <div class="relative">
+        <select id="tamañoHorchata" class="bg-purple-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+          <option value="25">Medio litro — $25</option>
+          <option value="35">Litro — $35</option>
+        </select>
+        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+      </div>
+    </div>
   </div>
 
   <div id="papasForm" class="hidden mt-4 p-4 bg-gray-800 rounded-xl">
