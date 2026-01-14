@@ -321,7 +321,7 @@
           <button id="bebidaH" onclick="seleccionarBebida('Horchata')" class="px-3 py-2 bg-gray-700 rounded">Horchata</button>
         </div>
         <div class="flex gap-2">
-          <input id="bebidaInput" placeholder="Sin hielo, mucho hielo, con limón, etc." class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <input id="bebidaInput" placeholder="¿De que tamaño será el agua? ¿Con o sin hielo?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
           <button onclick="confirmarBebida()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
         </div>
       </div>
@@ -347,7 +347,13 @@
         </select>
         <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
       </div>
-      <button onclick="agregarBebidaSola('Jamaica')" class="px-4 py-4 bg-green-600 rounded-xl font-semibold active:scale-95">Confirmar</button>
+      <button onclick="mostrarPersonalizacionBebida('Jamaica')" class="px-4 py-4 bg-green-600 rounded-xl font-semibold active:scale-95">Confirmar</button>
+    </div>
+    <div id="personalizacionJamaica" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="flex gap-2">
+        <input id="jamaicaPersonalInput" placeholder="Sin hielo, mucho hielo etc..." class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400">
+        <button onclick="confirmarBebidaPersonalizada('Jamaica')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+      </div>
     </div>
 
     <!-- Horchata -->
@@ -362,7 +368,13 @@
         </select>
         <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
       </div>
-      <button onclick="agregarBebidaSola('Horchata')" class="px-4 py-4 bg-green-600 rounded-xl font-semibold active:scale-95">Confirmar</button>
+      <button onclick="mostrarPersonalizacionBebida('Horchata')" class="px-4 py-4 bg-green-600 rounded-xl font-semibold active:scale-95">Confirmar</button>
+    </div>
+    <div id="personalizacionHorchata" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+      <div class="flex gap-2">
+        <input id="horchataPersonalInput" placeholder="Sin hielo, mucho hielo etc..." class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400">
+        <button onclick="confirmarBebidaPersonalizada('Horchata')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+      </div>
     </div>
   </div>
 

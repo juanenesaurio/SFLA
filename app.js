@@ -156,6 +156,10 @@ function limpiarFormulario() {
   if (phBox) phBox.classList.add('hidden');
   const peBox = document.getElementById('personalEspecialBox');
   if (peBox) peBox.classList.add('hidden');
+  const pjBox = document.getElementById('personalizacionJamaica');
+  if (pjBox) pjBox.classList.add('hidden');
+  const phBox = document.getElementById('personalizacionHorchata');
+  if (phBox) phBox.classList.add('hidden');
   productosEliminados = [];
   ordenEnModalActual = null;
 }
@@ -251,6 +255,10 @@ function toggleBebidas() {
   if (ph) ph.classList.add('hidden');
   const pe = document.getElementById('personalEspecialBox');
   if (pe) pe.classList.add('hidden');
+  const pj = document.getElementById('personalizacionJamaica');
+  if (pj) pj.classList.add('hidden');
+  const ph = document.getElementById('personalizacionHorchata');
+  if (ph) ph.classList.add('hidden');
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.toggle("hidden");
 }
@@ -343,18 +351,37 @@ function confirmarPapasSolas() {
 }
 
 /* agregar bebida sola con tamaño seleccionado */
-function agregarBebidaSola(nombre) {
+function mostrarPersonalizacionBebida(nombre) {
+  const boxId = 'personalizacion' + nombre;
+  const box = document.getElementById(boxId);
+  box.classList.remove('hidden');
+  const inputId = nombre.toLowerCase() + 'PersonalInput';
+  const input = document.getElementById(inputId);
+  if (input) input.focus();
+}
+
+function confirmarBebidaPersonalizada(nombre) {
   const selectId = 'tamaño' + nombre;
   const select = document.getElementById(selectId);
   const precio = parseInt(select.value);
   const tamañoTexto = select.options[select.selectedIndex].text;
   
+  // Obtener personalización
+  const inputId = nombre.toLowerCase() + 'PersonalInput';
+  const input = document.getElementById(inputId);
+  const personalizacion = input.value.trim();
+  
   // Agregar con el nombre completo incluyendo el tamaño
   const nombreCompleto = `${nombre} (${tamañoTexto.split(' — ')[0]})`;
   agregarProducto(nombreCompleto, precio, {
     category: 'bebida',
-    extras: null
+    extras: personalizacion ? { consideracion: personalizacion } : null
   });
+  
+  // Limpiar y ocultar
+  input.value = '';
+  const boxId = 'personalizacion' + nombre;
+  document.getElementById(boxId).classList.add('hidden');
 }
 
 /* Personalización larga para Sencilla */
