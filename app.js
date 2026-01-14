@@ -158,8 +158,8 @@ function limpiarFormulario() {
   if (peBox) peBox.classList.add('hidden');
   const pjBox = document.getElementById('personalizacionJamaica');
   if (pjBox) pjBox.classList.add('hidden');
-  const phBox = document.getElementById('personalizacionHorchata');
-  if (phBox) phBox.classList.add('hidden');
+  const phBebBox = document.getElementById('personalizacionHorchata');
+  if (phBebBox) phBebBox.classList.add('hidden');
   productosEliminados = [];
   ordenEnModalActual = null;
 }
@@ -257,8 +257,8 @@ function toggleBebidas() {
   if (pe) pe.classList.add('hidden');
   const pj = document.getElementById('personalizacionJamaica');
   if (pj) pj.classList.add('hidden');
-  const ph = document.getElementById('personalizacionHorchata');
-  if (ph) ph.classList.add('hidden');
+  const phBeb = document.getElementById('personalizacionHorchata');
+  if (phBeb) phBeb.classList.add('hidden');
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.toggle("hidden");
 }
