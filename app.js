@@ -485,6 +485,11 @@ function togglePerritosIndividuales() {
 }
 
 function toggleRamen() {
+  console.log("toggleRamen llamada");
+  const menuRamen = document.getElementById("menuRamen");
+  console.log("Menu Ramen element:", menuRamen);
+  console.log("Classes antes del toggle:", menuRamen ? menuRamen.className : "NO EXISTE");
+  
   document.getElementById("menuHamburguesas").classList.add("hidden");
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
@@ -511,6 +516,7 @@ function toggleRamen() {
   
   // Toggle menu principal
   document.getElementById("menuRamen").classList.toggle("hidden");
+  console.log("Classes después del toggle:", menuRamen.className);
   
   // Ocultar formularios de personalización de ramen
   document.getElementById("ramenForm").classList.add("hidden");
