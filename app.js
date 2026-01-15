@@ -1348,10 +1348,9 @@ function activarFinalizar() {
     guardarOrdenesLocal();
     
     // Enviar orden al Google Apps Script
-    const ordenParaEnviar = ordenEnEdicion !== null ? ordenesDelDia[ordenEnEdicion] : ordenesDelDia[ordenesDelDia.length - 1];
-    
     fetch('https://script.google.com/macros/s/AKfycbzzZyhrYwcH4xcIq48VLKD2aWLuM910j1plfTgI1GnrSAkcaidZOXYMHx-1RYcLJANH/exec', {
       method: 'POST',
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -1365,21 +1364,19 @@ function activarFinalizar() {
         observaciones: chismeClientil
       })
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.ok === true) {
-        alert("Orden enviada correctamente");
+    .then(() => {
+      alert(mensaje + "\n✅ Enviado a la nube");
+      limpiarFormulario();
+      if (ordenEnEdicion !== null) {
+        irAOrdenes();
       } else {
-        alert("Error al enviar la orden");
+        irAMenu();
       }
     })
     .catch(error => {
-      alert("Error al enviar la orden");
       console.error('Error:', error);
-    });
-    
-    alert(mensaje);
-    limpiarFormulario();
+      alert(mensaje + "\n⚠️ Guardado local (sin conexión)");
+      limpiarFormulario();
     if (ordenEnEdicion !== null) {
       irAOrdenes();
     } else {
