@@ -1377,11 +1377,12 @@ function activarFinalizar() {
       console.error('Error:', error);
       alert(mensaje + "\n⚠️ Guardado local (sin conexión)");
       limpiarFormulario();
-    if (ordenEnEdicion !== null) {
-      irAOrdenes();
-    } else {
-      irAMenu();
-    }
+      if (ordenEnEdicion !== null) {
+        irAOrdenes();
+      } else {
+        irAMenu();
+      }
+    });
   }, 1200);
 }
 
