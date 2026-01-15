@@ -35,6 +35,10 @@ let timerPerritoSencillo = null;
 let longPressTriggeredPerritoSencillo = false;
 let timerPerritoEspecial = null;
 let longPressTriggeredPerritoEspecial = false;
+let timerRamen = null;
+let longPressTriggeredRamen = false;
+let timerBirriamen = null;
+let longPressTriggeredBirriamen = false;
 
 /* inicializar órdenes del día desde localStorage */
 function inicializarOrdenes() {
@@ -187,6 +191,9 @@ function limpiarFormulario() {
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
+  document.getElementById("menuRamen").classList.add("hidden");
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
   document.getElementById('bebidaJ').classList.remove('ring-2');
   document.getElementById('bebidaH').classList.remove('ring-2');
   const psBox = document.getElementById('personalSencillaBox');
@@ -239,11 +246,6 @@ function confirmarDescripcion() {
 
 /* hamburguesas */
 function toggleHamburguesas() {
-  console.log("toggleHamburguesas called");
-  const menu = document.getElementById("menuHamburguesas");
-  console.log("Menu element:", menu);
-  console.log("Menu classes before toggle:", menu.className);
-  
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
@@ -269,7 +271,6 @@ function toggleHamburguesas() {
   
   // Toggle menu principal
   document.getElementById("menuHamburguesas").classList.toggle("hidden");
-  console.log("Menu classes after toggle:", menu.className);
 }
 
 function toggleBurritoSencillo() {
@@ -317,6 +318,9 @@ function toggleCombos() {
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
   document.getElementById("perritoSencilloForm").classList.add("hidden");
   document.getElementById("perritoEspecialForm").classList.add("hidden");
+  document.getElementById("menuRamen").classList.add("hidden");
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -343,6 +347,9 @@ function toggleCombosBurrito() {
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
   document.getElementById("perritoSencilloForm").classList.add("hidden");
   document.getElementById("perritoEspecialForm").classList.add("hidden");
+  document.getElementById("menuRamen").classList.add("hidden");
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -368,6 +375,9 @@ function toggleCombosPeatos() {
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
   document.getElementById("perritoSencilloForm").classList.add("hidden");
   document.getElementById("perritoEspecialForm").classList.add("hidden");
+  document.getElementById("menuRamen").classList.add("hidden");
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -394,6 +404,9 @@ function togglePapasForm() {
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
   document.getElementById("perritoSencilloForm").classList.add("hidden");
   document.getElementById("perritoEspecialForm").classList.add("hidden");
+  document.getElementById("menuRamen").classList.add("hidden");
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -420,6 +433,9 @@ function toggleBebidas() {
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
   document.getElementById("perritoSencilloForm").classList.add("hidden");
   document.getElementById("perritoEspecialForm").classList.add("hidden");
+  document.getElementById("menuRamen").classList.add("hidden");
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
   if (ps) ps.classList.add('hidden');
@@ -448,6 +464,9 @@ function togglePerritosIndividuales() {
   document.getElementById("burritoChorizoForm").classList.add("hidden");
   document.getElementById("burritoArracheraForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
+  document.getElementById("menuRamen").classList.add("hidden");
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
   const mb = document.getElementById("menuBebidas");
   if (mb) mb.classList.add("hidden");
   const ps = document.getElementById('personalSencillaBox');
@@ -463,6 +482,39 @@ function togglePerritosIndividuales() {
   // Ocultar formularios de personalización de perritos
   document.getElementById("perritoSencilloForm").classList.add("hidden");
   document.getElementById("perritoEspecialForm").classList.add("hidden");
+}
+
+function toggleRamen() {
+  document.getElementById("menuHamburguesas").classList.add("hidden");
+  document.getElementById("menuCombos").classList.add("hidden");
+  document.getElementById("comboForm").classList.add("hidden");
+  document.getElementById("menuCombosBurrito").classList.add("hidden");
+  document.getElementById("comboBurritoForm").classList.add("hidden");
+  document.getElementById("menuCombosPeatos").classList.add("hidden");
+  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuBurritoSencillo").classList.add("hidden");
+  document.getElementById("burritoPastorForm").classList.add("hidden");
+  document.getElementById("burritoChorizoForm").classList.add("hidden");
+  document.getElementById("burritoArracheraForm").classList.add("hidden");
+  document.getElementById("menuPerritosIndividuales").classList.add("hidden");
+  document.getElementById("perritoSencilloForm").classList.add("hidden");
+  document.getElementById("perritoEspecialForm").classList.add("hidden");
+  document.getElementById("papasForm").classList.add("hidden");
+  const mb = document.getElementById("menuBebidas");
+  if (mb) mb.classList.add("hidden");
+  const ps = document.getElementById('personalSencillaBox');
+  if (ps) ps.classList.add('hidden');
+  const ph = document.getElementById('personalHawaiianaBox');
+  if (ph) ph.classList.add('hidden');
+  const pe = document.getElementById('personalEspecialBox');
+  if (pe) pe.classList.add('hidden');
+  
+  // Toggle menu principal
+  document.getElementById("menuRamen").classList.toggle("hidden");
+  
+  // Ocultar formularios de personalización de ramen
+  document.getElementById("ramenForm").classList.add("hidden");
+  document.getElementById("birriamenForm").classList.add("hidden");
 }
 
 function abrirCombo(nombre, precio) {
@@ -1086,6 +1138,73 @@ function confirmarPerritoIndividual(nombre, precio, inputId, formId) {
   // Resetear flags
   if (nombre === 'Sencillo') longPressTriggeredPerritoSencillo = false;
   else if (nombre === 'Especial') longPressTriggeredPerritoEspecial = false;
+}
+
+/* Ramen Individual */
+function activarPersonalizacionRamen() {
+  timerRamen = setTimeout(() => {
+    longPressTriggeredRamen = true;
+    document.getElementById('ramenForm').classList.remove('hidden');
+  }, 1200);
+}
+
+function cancelarPersonalizacionRamen() {
+  clearTimeout(timerRamen);
+}
+
+function handleClickRamen(event) {
+  setTimeout(() => {
+    if (!longPressTriggeredRamen) {
+      agregarProducto('Ramen', 50, { category: 'ramen_individual' });
+    }
+    longPressTriggeredRamen = false;
+  }, 50);
+  
+  if (longPressTriggeredRamen) {
+    event.preventDefault();
+  }
+}
+
+function activarPersonalizacionBirriamen() {
+  timerBirriamen = setTimeout(() => {
+    longPressTriggeredBirriamen = true;
+    document.getElementById('birriamenForm').classList.remove('hidden');
+  }, 1200);
+}
+
+function cancelarPersonalizacionBirriamen() {
+  clearTimeout(timerBirriamen);
+}
+
+function handleClickBirriamen(event) {
+  setTimeout(() => {
+    if (!longPressTriggeredBirriamen) {
+      agregarProducto('Birriamen', 60, { category: 'ramen_individual' });
+    }
+    longPressTriggeredBirriamen = false;
+  }, 50);
+  
+  if (longPressTriggeredBirriamen) {
+    event.preventDefault();
+  }
+}
+
+function confirmarRamenIndividual(nombre, precio, inputId, formId) {
+  const personalizacion = document.getElementById(inputId).value.trim();
+  const extras = personalizacion ? { ramen: personalizacion } : null;
+  
+  agregarProducto(nombre, precio, {
+    category: 'ramen_individual',
+    extras: extras
+  });
+  
+  // Limpiar y ocultar el formulario específico
+  document.getElementById(inputId).value = '';
+  document.getElementById(formId).classList.add('hidden');
+  
+  // Resetear flags
+  if (nombre === 'Ramen') longPressTriggeredRamen = false;
+  else if (nombre === 'Birriamen') longPressTriggeredBirriamen = false;
 }
 
 /* carrito */

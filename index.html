@@ -180,7 +180,12 @@
       </div>
     </button>
 
-    <div class="w-20"></div>
+    <button onclick="toggleRamen()"
+      class="w-20 h-20 bg-gray-700 rounded-full text-4xl
+             active:scale-90 transition">
+      🍜
+    </button>
+
     <div class="w-20"></div>
   </div>
 
@@ -389,6 +394,55 @@
           <div class="flex gap-2">
             <input id="perritoEspecialInput" placeholder="¿Que llevará el perrito calenturiento?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
             <button onclick="confirmarPerritoIndividual('Especial', 25, 'perritoEspecialInput', 'perritoEspecialForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú Ramen -->
+  <div id="menuRamen" class="hidden mt-4 space-y-3">
+    <!-- Ramen -->
+    <div>
+      <button
+        onclick="handleClickRamen(event)"
+        onmousedown="activarPersonalizacionRamen()"
+        onmouseup="cancelarPersonalizacionRamen()"
+        onmouseleave="cancelarPersonalizacionRamen()"
+        ontouchstart="activarPersonalizacionRamen()"
+        ontouchend="cancelarPersonalizacionRamen()"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Ramen — $50
+      </button>
+      <div id="ramenForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🍜 Ramen:</label>
+          <div class="flex gap-2">
+            <input id="ramenInput" placeholder="¿Que llevará el ramen?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarRamenIndividual('Ramen', 50, 'ramenInput', 'ramenForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Birriamen -->
+    <div>
+      <button
+        onclick="handleClickBirriamen(event)"
+        onmousedown="activarPersonalizacionBirriamen()"
+        onmouseup="cancelarPersonalizacionBirriamen()"
+        onmouseleave="cancelarPersonalizacionBirriamen()"
+        ontouchstart="activarPersonalizacionBirriamen()"
+        ontouchend="cancelarPersonalizacionBirriamen()"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Birriamen — $60
+      </button>
+      <div id="birriamenForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🍜 Birriamen:</label>
+          <div class="flex gap-2">
+            <input id="birriamenInput" placeholder="¿Que llevará el ramen?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarRamenIndividual('Birriamen', 60, 'birriamenInput', 'birriamenForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
           </div>
         </div>
       </div>
