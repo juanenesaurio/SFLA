@@ -1345,8 +1345,40 @@ function activarFinalizar() {
       ordenesDelDia.push(ordenGuardada);
     }
     
-    alert(mensaje);
     guardarOrdenesLocal();
+    
+    // Enviar orden al Google Apps Script
+    const ordenParaEnviar = ordenEnEdicion !== null ? ordenesDelDia[ordenEnEdicion] : ordenesDelDia[ordenesDelDia.length - 1];
+    
+    fetch('https://script.google.com/macros/s/AKfycbzzZyhrYwcH4xcIq48VLKD2aWLuM910j1plfTgI1GnrSAkcaidZOXYMHx-1RYcLJANH/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: "crearOrden",
+        usuario: usuarioActual,
+        mesa: mesaNum,
+        descripcion: mesaDescripcion,
+        productos: historial,
+        total: total,
+        observaciones: chismeClientil
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.ok === true) {
+        alert("Orden enviada correctamente");
+      } else {
+        alert("Error al enviar la orden");
+      }
+    })
+    .catch(error => {
+      alert("Error al enviar la orden");
+      console.error('Error:', error);
+    });
+    
+    alert(mensaje);
     limpiarFormulario();
     if (ordenEnEdicion !== null) {
       irAOrdenes();
