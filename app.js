@@ -1,6 +1,74 @@
 // URL del backend de Google Apps Script
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyhIsIPBwgTYCX9XjDPtg6wuoGevrrMGCgWV_NXZzd-pVq0oT0kXaKkungXL3A7snJD/exec';
 
+// Función auxiliar para hacer fetch a Google Apps Script
+async function fetchToGAS(data) {
+  try {
+    console.log('Enviando a backend:', data);
+    
+    const response = await fetch(BACKEND_URL, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      redirect: 'follow',
+      body: JSON.stringify(data)
+    });
+    
+    console.log('Response status:', response.status);
+    
+    // Leer la respuesta como texto primero
+    const text = await response.text();
+    console.log('Response text:', text);
+    
+    // Intentar parsear como JSON
+    try {
+      const result = JSON.parse(text);
+      
+      // Verificar si hay error de hoja no encontrada
+      if (result.error && result.error.includes('appendRow')) {
+        return {
+          ok: false,
+          error: '❌ ERROR EN GOOGLE SHEETS:\n\nNo existe la hoja "VENTAS_HOY".\n\n✅ SOLUCIÓN:\n1. Abre tu Google Sheets\n2. Crea una pestaña llamada: VENTAS_HOY\n3. Agrega estos encabezados en la fila 1:\n   orden_id | usuario | mesa | descripcion | hora_creacion | hora_ultima_edicion | productos | total | estado | observaciones | orden_activa'
+        };
+      }
+      
+      // Verificar otros errores comunes
+      if (result.error && result.error.includes('getSheetByName')) {
+        return {
+          ok: false,
+          error: '❌ ERROR: No se encuentra la hoja de cálculo.\nVerifica que tu Apps Script esté vinculado al Google Sheets correcto.'
+        };
+      }
+      
+      return result;
+    } catch (e) {
+      console.error('Respuesta no es JSON:', text);
+      
+      // Si la respuesta contiene error de null
+      if (text.includes('Cannot read properties of null')) {
+        return {
+          ok: false,
+          error: '❌ ERROR EN GOOGLE SHEETS:\n\nLa hoja "VENTAS_HOY" no existe.\n\n✅ SOLUCIÓN:\n1. Abre tu Google Sheets\n2. Crea una pestaña llamada: VENTAS_HOY\n3. Intenta de nuevo'
+        };
+      }
+      
+      return { ok: false, error: 'Respuesta inválida del servidor: ' + text.substring(0, 200) };
+    }
+  } catch (error) {
+    console.error('Error en fetch:', error);
+    
+    // Mensaje más descriptivo según el tipo de error
+    if (error.message === 'Failed to fetch') {
+      return { 
+        ok: false, 
+        error: '❌ No se puede conectar al servidor.\n\n✅ VERIFICA:\n1. Tu conexión a internet\n2. Que la Web App esté publicada como "Cualquier persona"\n3. Que hayas actualizado la implementación'
+      };
+    }
+    
+    throw error;
+  }
+}
+
 let total = 0;
 let timerFinalizar = null;
 let historial = [];
@@ -1321,20 +1389,14 @@ function activarFinalizar() {
         const orden = ordenesDelDia[ordenEnEdicion];
         
         // Enviar al backend
-        const response = await fetch(BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
-            action: 'editarOrden',
-            orden_id: orden.orden_id,
-            cambios: {
-              productos: historial,
-              total: total
-            }
-          })
+        const result = await fetchToGAS({
+          action: 'editarOrden',
+          orden_id: orden.orden_id,
+          cambios: {
+            productos: historial,
+            total: total
+          }
         });
-        
-        const result = await response.json();
         
         if (result.ok) {
           // Actualizar localmente
@@ -1355,21 +1417,15 @@ function activarFinalizar() {
         }
       } else {
         // Modo nuevo: crear nueva orden
-        const response = await fetch(BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
-            action: 'crearOrden',
-            usuario: usuarioActual,
-            mesa: mesaNum,
-            descripcion: mesaDescripcion,
-            productos: historial,
-            total: total,
-            observaciones: chismeClientil
-          })
+        const result = await fetchToGAS({
+          action: 'crearOrden',
+          usuario: usuarioActual,
+          mesa: mesaNum,
+          descripcion: mesaDescripcion,
+          productos: historial,
+          total: total,
+          observaciones: chismeClientil
         });
-        
-        const result = await response.json();
         
         if (result.ok) {
           // Actualizar localmente
@@ -1443,15 +1499,9 @@ async function irAOrdenes() {
   
   try {
     // Cargar órdenes desde el backend
-    const response = await fetch(BACKEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'listarOrdenes'
-      })
+    const result = await fetchToGAS({
+      action: 'listarOrdenes'
     });
-    
-    const result = await response.json();
     
     if (result.ok) {
       // Actualizar órdenes locales con las del backend
@@ -1687,20 +1737,14 @@ async function eliminarProductoDeOrden(ordenIndice, productoIndice) {
     try {
       // Enviar cambios al backend
       if (orden.orden_id) {
-        const response = await fetch(BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
-            action: 'editarOrden',
-            orden_id: orden.orden_id,
-            cambios: {
-              productos: orden.productos,
-              total: orden.total
-            }
-          })
+        const result = await fetchToGAS({
+          action: 'editarOrden',
+          orden_id: orden.orden_id,
+          cambios: {
+            productos: orden.productos,
+            total: orden.total
+          }
         });
-        
-        const result = await response.json();
         
         if (!result.ok) {
           console.error('Error al actualizar orden en backend:', result.error);
@@ -1783,20 +1827,14 @@ async function rescatarProducto() {
   try {
     // Enviar cambios al backend
     if (orden.orden_id) {
-      const response = await fetch(BACKEND_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          action: 'editarOrden',
-          orden_id: orden.orden_id,
-          cambios: {
-            productos: orden.productos,
-            total: orden.total
-          }
-        })
+      const result = await fetchToGAS({
+        action: 'editarOrden',
+        orden_id: orden.orden_id,
+        cambios: {
+          productos: orden.productos,
+          total: orden.total
+        }
       });
-      
-      const result = await response.json();
       
       if (!result.ok) {
         console.error('Error al actualizar orden en backend:', result.error);
@@ -1825,17 +1863,11 @@ function activarCancelarOrden() {
       try {
         // Enviar al backend
         if (orden.orden_id) {
-          const response = await fetch(BACKEND_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-              action: 'cambiarEstado',
-              orden_id: orden.orden_id,
-              estado: 'cancelada'
-            })
+          const result = await fetchToGAS({
+            action: 'cambiarEstado',
+            orden_id: orden.orden_id,
+            estado: 'cancelada'
           });
-          
-          const result = await response.json();
           
           if (result.ok) {
             orden.estado = 'cancelada';
@@ -1883,17 +1915,11 @@ function activarPagadoOrden() {
       try {
         // Enviar al backend
         if (orden.orden_id) {
-          const response = await fetch(BACKEND_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-              action: 'cambiarEstado',
-              orden_id: orden.orden_id,
-              estado: 'pagada'
-            })
+          const result = await fetchToGAS({
+            action: 'cambiarEstado',
+            orden_id: orden.orden_id,
+            estado: 'pagada'
           });
-          
-          const result = await response.json();
           
           if (result.ok) {
             orden.estado = 'pagada';
