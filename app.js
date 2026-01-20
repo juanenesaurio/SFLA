@@ -1323,7 +1323,7 @@ function activarFinalizar() {
         // Enviar al backend
         const response = await fetch(BACKEND_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             action: 'editarOrden',
             orden_id: orden.orden_id,
@@ -1357,7 +1357,7 @@ function activarFinalizar() {
         // Modo nuevo: crear nueva orden
         const response = await fetch(BACKEND_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             action: 'crearOrden',
             usuario: usuarioActual,
@@ -1445,7 +1445,7 @@ async function irAOrdenes() {
     // Cargar órdenes desde el backend
     const response = await fetch(BACKEND_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         action: 'listarOrdenes'
       })
@@ -1689,7 +1689,7 @@ async function eliminarProductoDeOrden(ordenIndice, productoIndice) {
       if (orden.orden_id) {
         const response = await fetch(BACKEND_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             action: 'editarOrden',
             orden_id: orden.orden_id,
@@ -1785,7 +1785,7 @@ async function rescatarProducto() {
     if (orden.orden_id) {
       const response = await fetch(BACKEND_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({
           action: 'editarOrden',
           orden_id: orden.orden_id,
@@ -1827,7 +1827,7 @@ function activarCancelarOrden() {
         if (orden.orden_id) {
           const response = await fetch(BACKEND_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
               action: 'cambiarEstado',
               orden_id: orden.orden_id,
@@ -1885,7 +1885,7 @@ function activarPagadoOrden() {
         if (orden.orden_id) {
           const response = await fetch(BACKEND_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
               action: 'cambiarEstado',
               orden_id: orden.orden_id,
