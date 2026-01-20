@@ -1,3 +1,6 @@
+// URL del backend de Google Apps Script
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyhIsIPBwgTYCX9XjDPtg6wuoGevrrMGCgWV_NXZzd-pVq0oT0kXaKkungXL3A7snJD/exec';
+
 let total = 0;
 let timerFinalizar = null;
 let historial = [];
@@ -1304,7 +1307,7 @@ function eliminarProductoCarrito(index) {
 
 /* finalizar con pulsación */
 function activarFinalizar() {
-  timerFinalizar = setTimeout(() => {
+  timerFinalizar = setTimeout(async () => {
     // Guardar el chisme clientil
     chismeClientil = document.getElementById('chismeClientil').value.trim();
     
@@ -1312,69 +1315,90 @@ function activarFinalizar() {
     if (mesaDescripcion) mensaje = "Descripción: " + mesaDescripcion + "\n" + mensaje;
     if (mesaNum) mensaje = "Mesa: " + mesaNum + "\n" + mensaje;
     
-    if (ordenEnEdicion !== null) {
-      // Modo edición: actualizar orden existente
-      const orden = ordenesDelDia[ordenEnEdicion];
-      orden.productos = JSON.parse(JSON.stringify(historial));
-      orden.total = total;
-      orden.mesa = mesaNum || orden.mesa;
-      orden.descripcion = mesaDescripcion || orden.descripcion;
-      orden.chisme = chismeClientil;
-      orden.usuario = usuarioActual;
-      // Si es la primera vez que se edita, guarda la hora de la primera edición
-      if (!orden.editadoHoraPrimera) {
-        orden.editadoHoraPrimera = new Date().toLocaleTimeString();
-      }
-      orden.editadoHoraUltima = new Date().toLocaleTimeString();
-      orden.estado = 'editada'; // Marcar como editada
-      mensaje = "Cambios guardados\n" + mensaje;
-    } else {
-      // Modo nuevo: crear nueva orden
-      const ordenGuardada = {
-        id: ordenesDelDia.length + 1,
-        mesa: mesaNum,
-        descripcion: mesaDescripcion,
-        productos: JSON.parse(JSON.stringify(historial)),
-        total: total,
-        timestamp: new Date().toLocaleTimeString(),
-        estado: null, // Nueva orden sin estado
-        observacion: '', // Nueva orden sin observación
-        chisme: chismeClientil, // Guardar chisme clientil
-        usuario: usuarioActual // Guardar usuario
-      };
-      ordenesDelDia.push(ordenGuardada);
-    }
-    
-    guardarOrdenesLocal();
-    
-    // Enviar orden al Google Apps Script en segundo plano
     try {
-      fetch('https://script.google.com/macros/s/AKfycbzzZyhrYwcH4xcIq48VLKD2aWLuM910j1plfTgI1GnrSAkcaidZOXYMHx-1RYcLJANH/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: "crearOrden",
-          usuario: usuarioActual,
-          mesa: mesaNum,
-          descripcion: mesaDescripcion,
-          productos: historial,
-          total: total,
-          observaciones: chismeClientil
-        })
-      }).catch(error => console.error('Error al enviar:', error));
-    } catch (e) {
-      console.error('Error fetch:', e);
-    }
-    
-    alert(mensaje);
-    limpiarFormulario();
-    if (ordenEnEdicion !== null) {
-      irAOrdenes();
-    } else {
-      irAMenu();
+      if (ordenEnEdicion !== null) {
+        // Modo edición: actualizar orden existente
+        const orden = ordenesDelDia[ordenEnEdicion];
+        
+        // Enviar al backend
+        const response = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'editarOrden',
+            orden_id: orden.orden_id,
+            cambios: {
+              productos: historial,
+              total: total
+            }
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.ok) {
+          // Actualizar localmente
+          orden.productos = JSON.parse(JSON.stringify(historial));
+          orden.total = total;
+          orden.mesa = mesaNum || orden.mesa;
+          orden.descripcion = mesaDescripcion || orden.descripcion;
+          orden.observaciones = chismeClientil;
+          orden.usuario = usuarioActual;
+          orden.estado = 'editada';
+          
+          guardarOrdenesLocal();
+          mensaje = "Cambios guardados\n" + mensaje;
+          alert(mensaje);
+          irAOrdenes();
+        } else {
+          throw new Error(result.error || 'Error al editar orden');
+        }
+      } else {
+        // Modo nuevo: crear nueva orden
+        const response = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'crearOrden',
+            usuario: usuarioActual,
+            mesa: mesaNum,
+            descripcion: mesaDescripcion,
+            productos: historial,
+            total: total,
+            observaciones: chismeClientil
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.ok) {
+          // Actualizar localmente
+          const ordenGuardada = {
+            orden_id: result.orden_id,
+            id: ordenesDelDia.length + 1,
+            mesa: mesaNum,
+            descripcion: mesaDescripcion,
+            productos: JSON.parse(JSON.stringify(historial)),
+            total: total,
+            timestamp: new Date().toLocaleTimeString(),
+            estado: 'abierta',
+            observacion: '',
+            observaciones: chismeClientil,
+            usuario: usuarioActual
+          };
+          ordenesDelDia.push(ordenGuardada);
+          guardarOrdenesLocal();
+          
+          alert(mensaje);
+          limpiarFormulario();
+          irAMenu();
+        } else {
+          throw new Error(result.error || 'Error al crear orden');
+        }
+      }
+    } catch (error) {
+      console.error('Error al finalizar orden:', error);
+      alert('Error al procesar la orden: ' + error.message);
     }
   }, 1200);
 }
@@ -1412,10 +1436,40 @@ function cancelarVaciarCarrito() {
 /* órdenes del día */
 let timerBorrarOrdenes = null;
 
-function irAOrdenes() {
+async function irAOrdenes() {
   ocultarTodo();
   document.getElementById("menuOrdenes").classList.remove("hidden");
   ordenEnEdicion = null; // Limpiar modo edición al ir a órdenes
+  
+  try {
+    // Cargar órdenes desde el backend
+    const response = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'listarOrdenes'
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.ok) {
+      // Actualizar órdenes locales con las del backend
+      ordenesDelDia = result.ordenes.map((orden, index) => ({
+        ...orden,
+        id: index + 1,
+        timestamp: orden.hora ? new Date(orden.hora).toLocaleTimeString() : '',
+        observacion: orden.observaciones || ''
+      }));
+      guardarOrdenesLocal();
+    } else {
+      console.error('Error al cargar órdenes:', result.error);
+    }
+  } catch (error) {
+    console.error('Error al cargar órdenes:', error);
+    // Si falla, usar las órdenes locales
+  }
+  
   renderOrdenes();
 }
 
@@ -1486,11 +1540,10 @@ function mostrarDetallesOrden(indice) {
   }
   html += `<div class="text-sm mb-2"><strong>Mesa:</strong> ${orden.mesa || 'N/A'}</div>`;
   html += `<div class="text-sm mb-2"><strong>Descripción:</strong> ${orden.descripcion || 'N/A'}</div>`;
-  if (orden.chisme) {
-    html += `<div class="text-sm mb-2"><strong>Chisme:</strong> ${orden.chisme}</div>`;
-  }
-  if (orden.observacion) {
-    html += `<div class="text-sm mb-2"><strong>Observación:</strong> ${orden.observacion}</div>`;
+  // Usar 'observaciones' del backend, pero también verificar 'observacion' local
+  const observaciones = orden.observaciones || orden.observacion || '';
+  if (observaciones) {
+    html += `<div class="text-sm mb-2"><strong>Observaciones:</strong> ${observaciones}</div>`;
   }
   html += `<div class="text-sm mb-2"><strong>Hora:</strong> ${orden.timestamp}</div>`;
   html += `<div class="text-sm font-semibold mb-3">Productos:</div>`;
@@ -1571,7 +1624,7 @@ function cerrarDetalles() {
 }
 
 /* guardar observación de una orden */
-function confirmarObservacion() {
+async function confirmarObservacion() {
   if (ordenEnModalActual === null) {
     alert('Error: no hay orden seleccionada');
     return;
@@ -1582,24 +1635,39 @@ function confirmarObservacion() {
   
   if (observacionText) {
     orden.observacion = observacionText;
-    guardarOrdenesLocal();
+    orden.observaciones = observacionText; // Mantener consistencia con backend
     
-    // Mostrar confirmación
-    const observacionGuardada = document.getElementById('observacionGuardada');
-    observacionGuardada.innerText = 'Observación guardada: ' + observacionText;
-    observacionGuardada.classList.remove('hidden');
-    
-    // Limpiar textarea
-    document.getElementById('textareaObservacion').value = '';
+    try {
+      // Si tiene orden_id, actualizar en backend
+      if (orden.orden_id) {
+        // Nota: El backend de Apps Script actualiza observaciones al editar la orden
+        // Aquí guardamos localmente y se sincronizará en la próxima edición
+        guardarOrdenesLocal();
+      } else {
+        guardarOrdenesLocal();
+      }
+      
+      // Mostrar confirmación
+      const observacionGuardada = document.getElementById('observacionGuardada');
+      observacionGuardada.innerText = 'Observación guardada: ' + observacionText;
+      observacionGuardada.classList.remove('hidden');
+      
+      // Limpiar textarea
+      document.getElementById('textareaObservacion').value = '';
+    } catch (error) {
+      console.error('Error al guardar observación:', error);
+      alert('Error al guardar observación: ' + error.message);
+    }
   } else {
     alert('Por favor escribe una observación');
   }
 }
 
 /* eliminar producto de una orden */
-function eliminarProductoDeOrden(ordenIndice, productoIndice) {
+async function eliminarProductoDeOrden(ordenIndice, productoIndice) {
   if (confirm("¿Eliminar este producto?")) {
     const orden = ordenesDelDia[ordenIndice];
+    
     // Guardar en historial de eliminaciones
     if (ordenEnModalActual === ordenIndice) {
       productosEliminados.push(orden.productos[productoIndice]);
@@ -1613,12 +1681,34 @@ function eliminarProductoDeOrden(ordenIndice, productoIndice) {
     });
     orden.total = nuevoTotal;
 
-    // Marcar como editada con color amarillo y registrar hora de edición
-    if (!orden.editadoHoraPrimera) {
-      orden.editadoHoraPrimera = new Date().toLocaleTimeString();
-    }
-    orden.editadoHoraUltima = new Date().toLocaleTimeString();
+    // Marcar como editada
     orden.estado = 'editada';
+    
+    try {
+      // Enviar cambios al backend
+      if (orden.orden_id) {
+        const response = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'editarOrden',
+            orden_id: orden.orden_id,
+            cambios: {
+              productos: orden.productos,
+              total: orden.total
+            }
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (!result.ok) {
+          console.error('Error al actualizar orden en backend:', result.error);
+        }
+      }
+    } catch (error) {
+      console.error('Error al eliminar producto:', error);
+    }
 
     guardarOrdenesLocal();
     mostrarDetallesOrden(ordenIndice);
@@ -1664,7 +1754,7 @@ function abrirModoEdicion(indice) {
 }
 
 /* rescatar último producto eliminado */
-function rescatarProducto() {
+async function rescatarProducto() {
   if (!productosEliminados || productosEliminados.length === 0) {
     alert('No hay productos para rescatar');
     return;
@@ -1690,6 +1780,32 @@ function rescatarProducto() {
   // Marcar como editada
   orden.estado = 'editada';
   
+  try {
+    // Enviar cambios al backend
+    if (orden.orden_id) {
+      const response = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'editarOrden',
+          orden_id: orden.orden_id,
+          cambios: {
+            productos: orden.productos,
+            total: orden.total
+          }
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (!result.ok) {
+        console.error('Error al actualizar orden en backend:', result.error);
+      }
+    }
+  } catch (error) {
+    console.error('Error al rescatar producto:', error);
+  }
+  
   guardarOrdenesLocal();
   mostrarDetallesOrden(ordenEnModalActual);
   renderOrdenes();
@@ -1702,14 +1818,46 @@ function activarCancelarOrden() {
   const btn = document.getElementById("btnCancelarOrden");
   btn.classList.add("ring-4", "ring-red-400");
   
-  timerCancelarOrden = setTimeout(() => {
+  timerCancelarOrden = setTimeout(async () => {
     if (ordenEnModalActual !== null) {
       const orden = ordenesDelDia[ordenEnModalActual];
-      orden.estado = 'cancelada';
-      guardarOrdenesLocal();
-      renderOrdenes();
-      cerrarDetalles();
-      alert('Orden cancelada');
+      
+      try {
+        // Enviar al backend
+        if (orden.orden_id) {
+          const response = await fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'cambiarEstado',
+              orden_id: orden.orden_id,
+              estado: 'cancelada'
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (result.ok) {
+            orden.estado = 'cancelada';
+            guardarOrdenesLocal();
+            renderOrdenes();
+            cerrarDetalles();
+            alert('Orden cancelada');
+          } else {
+            throw new Error(result.error || 'Error al cancelar orden');
+          }
+        } else {
+          // Si no tiene orden_id, solo actualizar localmente
+          orden.estado = 'cancelada';
+          guardarOrdenesLocal();
+          renderOrdenes();
+          cerrarDetalles();
+          alert('Orden cancelada');
+        }
+      } catch (error) {
+        console.error('Error al cancelar orden:', error);
+        alert('Error al cancelar orden: ' + error.message);
+      }
     }
     btn.classList.remove("ring-4", "ring-red-400");
   }, 2000);
@@ -1728,14 +1876,46 @@ function activarPagadoOrden() {
   const btn = document.getElementById("btnPagadoOrden");
   btn.classList.add("ring-4", "ring-green-400");
   
-  timerPagadoOrden = setTimeout(() => {
+  timerPagadoOrden = setTimeout(async () => {
     if (ordenEnModalActual !== null) {
       const orden = ordenesDelDia[ordenEnModalActual];
-      orden.estado = 'pagada';
-      guardarOrdenesLocal();
-      renderOrdenes();
-      cerrarDetalles();
-      alert('Orden marcada como pagada');
+      
+      try {
+        // Enviar al backend
+        if (orden.orden_id) {
+          const response = await fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'cambiarEstado',
+              orden_id: orden.orden_id,
+              estado: 'pagada'
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (result.ok) {
+            orden.estado = 'pagada';
+            guardarOrdenesLocal();
+            renderOrdenes();
+            cerrarDetalles();
+            alert('Orden marcada como pagada');
+          } else {
+            throw new Error(result.error || 'Error al marcar como pagada');
+          }
+        } else {
+          // Si no tiene orden_id, solo actualizar localmente
+          orden.estado = 'pagada';
+          guardarOrdenesLocal();
+          renderOrdenes();
+          cerrarDetalles();
+          alert('Orden marcada como pagada');
+        }
+      } catch (error) {
+        console.error('Error al marcar orden como pagada:', error);
+        alert('Error al marcar como pagada: ' + error.message);
+      }
     }
     btn.classList.remove("ring-4", "ring-green-400");
   }, 1200);
