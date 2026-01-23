@@ -125,9 +125,15 @@ let longPressTriggeredBirriamen = false;
 
 /* inicializar órdenes del día desde localStorage */
 function inicializarOrdenes() {
-  const guardadas = localStorage.getItem('ordenesDelDia');
-  if (guardadas) {
-    ordenesDelDia = JSON.parse(guardadas);
+  try {
+    const guardadas = localStorage.getItem('ordenesDelDia');
+    if (guardadas) {
+      ordenesDelDia = JSON.parse(guardadas);
+    }
+  } catch (error) {
+    console.error('Error al cargar localStorage, limpiando...', error);
+    localStorage.removeItem('ordenesDelDia');
+    ordenesDelDia = [];
   }
 }
 
@@ -145,8 +151,13 @@ function limpiarLocalStorage() {
 
 
 /* guardar órdenes en localStorage */
+/* guardar órdenes en localStorage */
 function guardarOrdenesLocal() {
-  localStorage.setItem('ordenesDelDia', JSON.stringify(ordenesDelDia));
+  try {
+    localStorage.setItem('ordenesDelDia', JSON.stringify(ordenesDelDia));
+  } catch (error) {
+    console.error('Error al guardar en localStorage:', error);
+  }
 }
 
 // Modificar función de finalizar orden para guardar usuario
