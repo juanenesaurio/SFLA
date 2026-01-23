@@ -1,5 +1,5 @@
 // URL del backend de Google Apps Script
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzbmgz4JOns0xgeBSSVdLYtREKkmyQQ_L2iXDr84vaJGJi_NXRISFdbc7OV8uWBgjuE/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyM_-653pTWVADfgddQAa0NG0Q76I5fGe2DH7RvImUFB80FQNTxNbeOVNDKdKeNWK3g/exec';
 
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
@@ -59,6 +59,10 @@ async function fetchToGAS(data) {
           error: '❌ ERROR EN BACKEND:\n\nHay un error de código en tu Apps Script.\nLa variable "data" no está definida correctamente.\n\n✅ Revisa la función cambiarEstado() en tu backend.'
         };
       }
+      
+      // Mostrar más detalles del error
+      console.error('Texto completo de la respuesta:', text);
+      alert('DEBUG - Respuesta del servidor:\n' + text.substring(0, 500));
       
       return { ok: false, error: 'Respuesta inválida del servidor: ' + text.substring(0, 200) };
     }
@@ -126,6 +130,18 @@ function inicializarOrdenes() {
     ordenesDelDia = JSON.parse(guardadas);
   }
 }
+
+/* FUNCIÓN TEMPORAL: Limpiar localStorage */
+function limpiarLocalStorage() {
+  if (confirm('⚠️ ADVERTENCIA:\n\nEsto borrará todas las órdenes guardadas localmente.\n\n¿Estás seguro?')) {
+    localStorage.removeItem('ordenesDelDia');
+    ordenesDelDia = [];
+    alert('✅ LocalStorage limpiado. Recarga la página.');
+    location.reload();
+  }
+}
+// Para usar: Abre la consola del navegador (F12) y escribe: limpiarLocalStorage()
+
 
 
 /* guardar órdenes en localStorage */
