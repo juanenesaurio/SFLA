@@ -1,5 +1,5 @@
 // URL del backend de Google Apps Script
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyhIsIPBwgTYCX9XjDPtg6wuoGevrrMGCgWV_NXZzd-pVq0oT0kXaKkungXL3A7snJD/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyHSydZHkaDS1Ba8BbNNibXcXE7Non6DDRDVhFquWTqiiU_wpkFJcL7IfSXqg8Ncohs/exec';
 
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
@@ -1395,7 +1395,8 @@ function activarFinalizar() {
           cambios: {
             productos: historial,
             total: total
-          }
+          },
+          orden_activa: true  // Mantener la orden activa al editar
         });
         
         if (result.ok) {
@@ -1424,7 +1425,8 @@ function activarFinalizar() {
           descripcion: mesaDescripcion,
           productos: historial,
           total: total,
-          observaciones: chismeClientil
+          observaciones: chismeClientil,
+          orden_activa: true  // Explícitamente crear como activa
         });
         
         if (result.ok) {
@@ -1918,7 +1920,8 @@ function activarPagadoOrden() {
           const result = await fetchToGAS({
             action: 'cambiarEstado',
             orden_id: orden.orden_id,
-            estado: 'pagada'
+            estado: 'pagada',
+            orden_activa: true  // Mantener la orden activa en el backend
           });
           
           if (result.ok) {
