@@ -1,5 +1,5 @@
 // URL del backend de Google Apps Script
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyM_-653pTWVADfgddQAa0NG0Q76I5fGe2DH7RvImUFB80FQNTxNbeOVNDKdKeNWK3g/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxmo0XRmO3-8PucBSXKVxDVRq1iNRPWZxm3HlTkzMR0ikcQOno8z5NoUFdAkBa0rouF/exec';
 
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
@@ -1523,18 +1523,21 @@ async function irAOrdenes() {
           timestamp: orden.hora ? new Date(orden.hora).toLocaleTimeString() : '',
           observacion: orden.observaciones || ''
         }));
+        console.log(`✅ Cargadas ${ordenesDelDia.length} órdenes desde el backend`);
       } else {
         console.log('No hay órdenes en el backend');
         ordenesDelDia = [];
       }
     } else {
       console.error('Error al cargar órdenes:', result.error);
-      alert('Error al cargar órdenes del servidor:\n' + result.error);
+      // NO mostrar alert, solo log
+      console.warn('Usando array vacío de órdenes');
       ordenesDelDia = [];
     }
   } catch (error) {
     console.error('Error al cargar órdenes:', error);
-    alert('Error al conectar con el servidor:\n' + error.message);
+    // NO mostrar alert, solo log
+    console.warn('Usando array vacío de órdenes');
     ordenesDelDia = [];
   }
   
