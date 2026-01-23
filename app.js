@@ -20,6 +20,15 @@ async function fetchToGAS(data) {
     const text = await response.text();
     console.log('Response text:', text);
     
+    // Verificar si la respuesta está vacía
+    if (!text || text.trim() === '') {
+      console.error('Respuesta vacía del servidor');
+      return { 
+        ok: false, 
+        error: '❌ El servidor devolvió una respuesta vacía.\n\nPosibles causas:\n1. El backend no está respondiendo correctamente\n2. Hay un error en el Apps Script\n3. El deployment no está actualizado'
+      };
+    }
+    
     // Intentar parsear como JSON
     try {
       const result = JSON.parse(text);
@@ -1505,19 +1514,28 @@ async function irAOrdenes() {
     });
     
     if (result.ok) {
-      // Actualizar órdenes locales con las del backend
-      ordenesDelDia = result.ordenes.map((orden, index) => ({
-        ...orden,
-        id: index + 1,
-        timestamp: orden.hora ? new Date(orden.hora).toLocaleTimeString() : '',
-        observacion: orden.observaciones || ''
-      }));
+      // Verificar si hay órdenes
+      if (result.ordenes && Array.isArray(result.ordenes)) {
+        // Actualizar órdenes locales con las del backend
+        ordenesDelDia = result.ordenes.map((orden, index) => ({
+          ...orden,
+          id: index + 1,
+          timestamp: orden.hora ? new Date(orden.hora).toLocaleTimeString() : '',
+          observacion: orden.observaciones || ''
+        }));
+      } else {
+        console.log('No hay órdenes en el backend');
+        ordenesDelDia = [];
+      }
     } else {
       console.error('Error al cargar órdenes:', result.error);
+      alert('Error al cargar órdenes del servidor:\n' + result.error);
+      ordenesDelDia = [];
     }
   } catch (error) {
     console.error('Error al cargar órdenes:', error);
-    // Si falla, usar las órdenes locales
+    alert('Error al conectar con el servidor:\n' + error.message);
+    ordenesDelDia = [];
   }
   
   renderOrdenes();
