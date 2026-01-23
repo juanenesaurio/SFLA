@@ -1,5 +1,5 @@
 // URL del backend de Google Apps Script
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzwt9qvJhDlOg1Om7yh2XS7nFgGOFlpCZwMB4T-D5yeYwxNPI0LYrP-UNKMV_4H-m_g/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzbmgz4JOns0xgeBSSVdLYtREKkmyQQ_L2iXDr84vaJGJi_NXRISFdbc7OV8uWBgjuE/exec';
 
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
@@ -49,6 +49,14 @@ async function fetchToGAS(data) {
         return {
           ok: false,
           error: '❌ ERROR EN GOOGLE SHEETS:\n\nLa hoja "VENTAS_HOY" no existe.\n\n✅ SOLUCIÓN:\n1. Abre tu Google Sheets\n2. Crea una pestaña llamada: VENTAS_HOY\n3. Intenta de nuevo'
+        };
+      }
+      
+      // Si hay error de 'data is not defined'
+      if (text.includes('data is not defined') || text.includes('ReferenceError')) {
+        return {
+          ok: false,
+          error: '❌ ERROR EN BACKEND:\n\nHay un error de código en tu Apps Script.\nLa variable "data" no está definida correctamente.\n\n✅ Revisa la función cambiarEstado() en tu backend.'
         };
       }
       
