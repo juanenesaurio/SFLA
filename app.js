@@ -1,6 +1,19 @@
 // URL del backend de Google Apps Script
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyM_-653pTWVADfgddQAa0NG0Q76I5fGe2DH7RvImUFB80FQNTxNbeOVNDKdKeNWK3g/exec';
 
+// LIMPIEZA DE EMERGENCIA: Verificar y limpiar localStorage corrupto
+(function() {
+  try {
+    const test = localStorage.getItem('ordenesDelDia');
+    if (test) {
+      JSON.parse(test); // Intenta parsear
+    }
+  } catch (e) {
+    console.warn('LocalStorage corrupto detectado, limpiando...');
+    localStorage.removeItem('ordenesDelDia');
+  }
+})();
+
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
   try {
