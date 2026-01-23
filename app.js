@@ -1,19 +1,6 @@
 // URL del backend de Google Apps Script
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyM_-653pTWVADfgddQAa0NG0Q76I5fGe2DH7RvImUFB80FQNTxNbeOVNDKdKeNWK3g/exec';
 
-// LIMPIEZA DE EMERGENCIA: Verificar y limpiar localStorage corrupto
-(function() {
-  try {
-    const test = localStorage.getItem('ordenesDelDia');
-    if (test) {
-      JSON.parse(test); // Intenta parsear
-    }
-  } catch (e) {
-    console.warn('LocalStorage corrupto detectado, limpiando...');
-    localStorage.removeItem('ordenesDelDia');
-  }
-})();
-
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
   try {
@@ -136,42 +123,9 @@ let longPressTriggeredRamen = false;
 let timerBirriamen = null;
 let longPressTriggeredBirriamen = false;
 
-/* inicializar órdenes del día desde localStorage */
-function inicializarOrdenes() {
-  try {
-    const guardadas = localStorage.getItem('ordenesDelDia');
-    if (guardadas) {
-      ordenesDelDia = JSON.parse(guardadas);
-    }
-  } catch (error) {
-    console.error('Error al cargar localStorage, limpiando...', error);
-    localStorage.removeItem('ordenesDelDia');
-    ordenesDelDia = [];
-  }
-}
-
-/* FUNCIÓN TEMPORAL: Limpiar localStorage */
-function limpiarLocalStorage() {
-  if (confirm('⚠️ ADVERTENCIA:\n\nEsto borrará todas las órdenes guardadas localmente.\n\n¿Estás seguro?')) {
-    localStorage.removeItem('ordenesDelDia');
-    ordenesDelDia = [];
-    alert('✅ LocalStorage limpiado. Recarga la página.');
-    location.reload();
-  }
-}
-// Para usar: Abre la consola del navegador (F12) y escribe: limpiarLocalStorage()
+// Todas las órdenes ahora se manejan desde el backend (Google Sheets)
 
 
-
-/* guardar órdenes en localStorage */
-/* guardar órdenes en localStorage */
-function guardarOrdenesLocal() {
-  try {
-    localStorage.setItem('ordenesDelDia', JSON.stringify(ordenesDelDia));
-  } catch (error) {
-    console.error('Error al guardar en localStorage:', error);
-  }
-}
 
 // Modificar función de finalizar orden para guardar usuario
 function finalizarOrden() {
@@ -195,8 +149,7 @@ function renderOrden(orden) {
   // ...insertar usuario en el HTML de la orden...
 }
 
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', inicializarOrdenes);
+// Las órdenes se cargan desde el backend
 
 /* navegación */
 function ocultarTodo() {
@@ -1457,7 +1410,6 @@ function activarFinalizar() {
           orden.usuario = usuarioActual;
           orden.estado = 'editada';
           
-          guardarOrdenesLocal();
           mensaje = "Cambios guardados\n" + mensaje;
           alert(mensaje);
           irAOrdenes();
@@ -1493,7 +1445,6 @@ function activarFinalizar() {
             usuario: usuarioActual
           };
           ordenesDelDia.push(ordenGuardada);
-          guardarOrdenesLocal();
           
           alert(mensaje);
           limpiarFormulario();
@@ -1561,7 +1512,6 @@ async function irAOrdenes() {
         timestamp: orden.hora ? new Date(orden.hora).toLocaleTimeString() : '',
         observacion: orden.observaciones || ''
       }));
-      guardarOrdenesLocal();
     } else {
       console.error('Error al cargar órdenes:', result.error);
     }
@@ -1742,9 +1692,7 @@ async function confirmarObservacion() {
       if (orden.orden_id) {
         // Nota: El backend de Apps Script actualiza observaciones al editar la orden
         // Aquí guardamos localmente y se sincronizará en la próxima edición
-        guardarOrdenesLocal();
       } else {
-        guardarOrdenesLocal();
       }
       
       // Mostrar confirmación
@@ -1804,7 +1752,6 @@ async function eliminarProductoDeOrden(ordenIndice, productoIndice) {
       console.error('Error al eliminar producto:', error);
     }
 
-    guardarOrdenesLocal();
     mostrarDetallesOrden(ordenIndice);
     renderOrdenes();
   }
@@ -1894,7 +1841,6 @@ async function rescatarProducto() {
     console.error('Error al rescatar producto:', error);
   }
   
-  guardarOrdenesLocal();
   mostrarDetallesOrden(ordenEnModalActual);
   renderOrdenes();
 }
@@ -1921,7 +1867,6 @@ function activarCancelarOrden() {
           
           if (result.ok) {
             orden.estado = 'cancelada';
-            guardarOrdenesLocal();
             renderOrdenes();
             cerrarDetalles();
             alert('Orden cancelada');
@@ -1931,7 +1876,6 @@ function activarCancelarOrden() {
         } else {
           // Si no tiene orden_id, solo actualizar localmente
           orden.estado = 'cancelada';
-          guardarOrdenesLocal();
           renderOrdenes();
           cerrarDetalles();
           alert('Orden cancelada');
@@ -1974,7 +1918,6 @@ function activarPagadoOrden() {
           
           if (result.ok) {
             orden.estado = 'pagada';
-            guardarOrdenesLocal();
             renderOrdenes();
             cerrarDetalles();
             alert('Orden marcada como pagada');
@@ -1984,7 +1927,6 @@ function activarPagadoOrden() {
         } else {
           // Si no tiene orden_id, solo actualizar localmente
           orden.estado = 'pagada';
-          guardarOrdenesLocal();
           renderOrdenes();
           cerrarDetalles();
           alert('Orden marcada como pagada');
@@ -2009,7 +1951,6 @@ function activarBorrarOrdenes() {
   btn.classList.add("ring-4", "ring-red-400");
   timerBorrarOrdenes = setTimeout(() => {
     ordenesDelDia = [];
-    guardarOrdenesLocal();
     renderOrdenes();
     cerrarDetalles();
     btn.classList.remove("ring-4", "ring-red-400");
