@@ -215,10 +215,273 @@ function volverAMenu() {
   document.getElementById("menuPrincipal").classList.remove("hidden");
 }
 
-function irACocina() {
+async function irACocina() {
   ocultarTodo();
   document.getElementById("menuCocina").classList.remove("hidden");
+  await cargarOrdenesCocina();
+  iniciarActualizacionCocina();
 }
+
+/* ==================== COCINA ==================== */
+let ordenesCocina = [];
+let intervalActualizacionCocina = null;
+
+// Cargar órdenes desde el backend para cocina
+async function cargarOrdenesCocina() {
+  try {
+    const result = await fetchToGAS({
+      action: 'listarOrdenes'
+    });
+    
+    if (result.ok && result.ordenes) {
+      ordenesCocina = result.ordenes;
+      renderCocina();
+    } else {
+      console.error('Error al cargar órdenes de cocina:', result.error);
+      ordenesCocina = [];
+      renderCocina();
+    }
+  } catch (error) {
+    console.error('Error al cargar órdenes de cocina:', error);
+    ordenesCocina = [];
+    renderCocina();
+  }
+}
+
+// Renderizar tarjetas de cocina
+function renderCocina() {
+  const grid = document.getElementById('gridCocina');
+  
+  if (ordenesCocina.length === 0) {
+    grid.innerHTML = '<div class="col-span-full text-center text-gray-400 text-xl">No hay órdenes</div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  
+  ordenesCocina.forEach(orden => {
+    const tarjeta = crearTarjetaCocina(orden);
+    grid.appendChild(tarjeta);
+  });
+}
+
+// Crear una tarjeta de orden para cocina
+function crearTarjetaCocina(orden) {
+  const div = document.createElement('div');
+  
+  // Color de fondo según estado de cocina
+  const estadoCocina = orden.cocina_estado || 'nueva';
+  let bgColor = 'bg-white';
+  if (estadoCocina === 'cocinando') bgColor = 'bg-yellow-400';
+  else if (estadoCocina === 'lista') bgColor = 'bg-blue-400';
+  else if (estadoCocina === 'entregada') bgColor = 'bg-green-400';
+  
+  // Emoji según estado
+  let emoji = '🐣';
+  if (estadoCocina === 'cocinando') emoji = '🔥';
+  else if (estadoCocina === 'lista') emoji = '🛎️';
+  else if (estadoCocina === 'entregada') emoji = '🎉';
+  
+  // Calcular semáforo de tiempo
+  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora);
+  
+  div.className = `${bgColor} rounded-xl p-4 shadow-lg relative text-gray-900`;
+  
+  // Productos formateados
+  let productosHTML = '';
+  if (orden.productos && Array.isArray(orden.productos)) {
+    productosHTML = orden.productos.map(p => 
+      `<div class="text-sm">• ${p.nombre} ${p.cantidad > 1 ? `x${p.cantidad}` : ''}</div>`
+    ).join('');
+  }
+  
+  div.innerHTML = `
+    <!-- Emoji de estado (esquina superior derecha) -->
+    <div class="absolute top-2 right-2 text-3xl">${emoji}</div>
+    
+    <!-- Orden # -->
+    <div class="text-xl font-bold mb-2">Orden #${orden.orden_id || orden.id}</div>
+    
+    <!-- Estado de cocina -->
+    <div class="text-sm font-semibold mb-2 uppercase">Estado: ${estadoCocina}</div>
+    
+    <!-- Mesa -->
+    <div class="text-lg font-semibold mb-2">Mesa: ${orden.mesa || 'N/A'}</div>
+    
+    <!-- Hora -->
+    <div class="text-sm mb-3 opacity-75">
+      ${orden.hora_ultima_edicion ? new Date(orden.hora_ultima_edicion).toLocaleTimeString() : 'N/A'}
+    </div>
+    
+    <!-- Productos -->
+    <div class="mb-3 bg-black bg-opacity-10 rounded p-2">
+      <div class="font-semibold text-sm mb-1">Productos:</div>
+      ${productosHTML || '<div class="text-sm">Sin productos</div>'}
+    </div>
+    
+    <!-- Observaciones -->
+    ${orden.observaciones ? `
+      <div class="mb-3 bg-black bg-opacity-10 rounded p-2">
+        <div class="font-semibold text-sm mb-1">Observaciones:</div>
+        <div class="text-sm">${orden.observaciones}</div>
+      </div>
+    ` : ''}
+    
+    <!-- Semáforo de tiempo -->
+    <div class="flex items-center gap-2 mb-4 p-2 bg-black bg-opacity-10 rounded">
+      <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
+      <div class="text-sm font-semibold">${semaforoInfo.texto}</div>
+    </div>
+    
+    <!-- Botones de cambio de estado -->
+    <div class="flex gap-2 mt-4">
+      <button 
+        onclick="cambiarEstadoCocina('${orden.orden_id}', 'cocinando')"
+        class="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg font-semibold active:scale-95 transition">
+        COCINANDO
+      </button>
+      
+      <button 
+        onmousedown="activarCambioEstadoCocina('${orden.orden_id}', 'lista', this)"
+        onmouseup="cancelarCambioEstadoCocina()"
+        ontouchstart="activarCambioEstadoCocina('${orden.orden_id}', 'lista', this)"
+        ontouchend="cancelarCambioEstadoCocina()"
+        class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg font-semibold active:scale-95 transition relative">
+        <span class="relative z-10">LISTA (1.2s)</span>
+        <div class="progress-bar absolute bottom-0 left-0 h-1 bg-white opacity-50 rounded-b-lg transition-all" style="width: 0%"></div>
+      </button>
+      
+      <button 
+        onmousedown="activarCambioEstadoCocina('${orden.orden_id}', 'entregada', this)"
+        onmouseup="cancelarCambioEstadoCocina()"
+        ontouchstart="activarCambioEstadoCocina('${orden.orden_id}', 'entregada', this)"
+        ontouchend="cancelarCambioEstadoCocina()"
+        class="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg font-semibold active:scale-95 transition relative">
+        <span class="relative z-10">ENTREGADA (1.2s)</span>
+        <div class="progress-bar absolute bottom-0 left-0 h-1 bg-white opacity-50 rounded-b-lg transition-all" style="width: 0%"></div>
+      </button>
+    </div>
+  `;
+  
+  return div;
+}
+
+// Calcular el semáforo de tiempo
+function calcularSemaforo(horaOrden) {
+  if (!horaOrden) {
+    return {
+      circuloClass: 'bg-gray-400',
+      texto: 'Sin hora registrada'
+    };
+  }
+  
+  const ahora = new Date();
+  const horaOrdenDate = new Date(horaOrden);
+  const diferenciaMinutos = (ahora - horaOrdenDate) / 1000 / 60;
+  
+  if (diferenciaMinutos < 5) {
+    return {
+      circuloClass: 'bg-green-500 animate-pulse',
+      texto: 'recién nacida 😌'
+    };
+  } else if (diferenciaMinutos < 15) {
+    return {
+      circuloClass: 'bg-yellow-500 animate-pulse',
+      texto: 'ojito ehh 👀'
+    };
+  } else {
+    return {
+      circuloClass: 'bg-red-500 animate-pulse',
+      texto: '¡El diablo, que se va el cliente! 😈'
+    };
+  }
+}
+
+// Variables para press & hold
+let timerCambioEstadoCocina = null;
+let progressInterval = null;
+
+// Cambio inmediato de estado (para COCINANDO)
+async function cambiarEstadoCocina(ordenId, nuevoEstado) {
+  try {
+    const result = await fetchToGAS({
+      action: 'cambiarEstadoCocina',
+      orden_id: ordenId,
+      cocina_estado: nuevoEstado
+    });
+    
+    if (result.ok) {
+      await cargarOrdenesCocina();
+    } else {
+      alert('Error al cambiar estado: ' + result.error);
+    }
+  } catch (error) {
+    console.error('Error al cambiar estado de cocina:', error);
+    alert('Error al cambiar estado');
+  }
+}
+
+// Activar cambio de estado con press & hold
+function activarCambioEstadoCocina(ordenId, nuevoEstado, btn) {
+  const progressBar = btn.querySelector('.progress-bar');
+  let progress = 0;
+  
+  // Animación de progreso
+  progressInterval = setInterval(() => {
+    progress += 100 / 12; // 1200ms / 100ms intervals
+    if (progress > 100) progress = 100;
+    progressBar.style.width = progress + '%';
+  }, 100);
+  
+  // Timer de 1.2 segundos
+  timerCambioEstadoCocina = setTimeout(async () => {
+    clearInterval(progressInterval);
+    progressBar.style.width = '0%';
+    await cambiarEstadoCocina(ordenId, nuevoEstado);
+  }, 1200);
+}
+
+// Cancelar cambio de estado
+function cancelarCambioEstadoCocina() {
+  if (timerCambioEstadoCocina) {
+    clearTimeout(timerCambioEstadoCocina);
+    timerCambioEstadoCocina = null;
+  }
+  if (progressInterval) {
+    clearInterval(progressInterval);
+    progressInterval = null;
+  }
+  
+  // Resetear todas las barras de progreso
+  document.querySelectorAll('.progress-bar').forEach(bar => {
+    bar.style.width = '0%';
+  });
+}
+
+// Iniciar actualización automática cada 30 segundos
+function iniciarActualizacionCocina() {
+  // Limpiar intervalo anterior si existe
+  if (intervalActualizacionCocina) {
+    clearInterval(intervalActualizacionCocina);
+  }
+  
+  // Actualizar cada 30 segundos
+  intervalActualizacionCocina = setInterval(() => {
+    if (!document.getElementById('menuCocina').classList.contains('hidden')) {
+      cargarOrdenesCocina();
+    }
+  }, 30000);
+}
+
+// Detener actualización cuando se sale de cocina
+function detenerActualizacionCocina() {
+  if (intervalActualizacionCocina) {
+    clearInterval(intervalActualizacionCocina);
+    intervalActualizacionCocina = null;
+  }
+}
+
+/* ==================== FIN COCINA ==================== */
 
 /* limpiar formulario de nueva orden */
 function limpiarFormulario() {
