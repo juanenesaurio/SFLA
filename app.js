@@ -162,7 +162,7 @@ function renderOrden(orden) {
 
 /* navegación */
 function ocultarTodo() {
-  ["bienvenida","menuPrincipal","nuevaOrden","menuOrdenes","barraUsuarios"].forEach(id =>
+  ["bienvenida","menuPrincipal","nuevaOrden","menuOrdenes","barraUsuarios","menuCocina"].forEach(id =>
     document.getElementById(id).classList.add("hidden")
   );
 }
@@ -213,6 +213,11 @@ function irANuevaOrden() {
 function volverAMenu() {
   ocultarTodo();
   document.getElementById("menuPrincipal").classList.remove("hidden");
+}
+
+function irACocina() {
+  ocultarTodo();
+  document.getElementById("menuCocina").classList.remove("hidden");
 }
 
 /* limpiar formulario de nueva orden */
