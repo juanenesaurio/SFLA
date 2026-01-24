@@ -1,5 +1,5 @@
 // URL del backend de Google Apps Script
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxmo0XRmO3-8PucBSXKVxDVRq1iNRPWZxm3HlTkzMR0ikcQOno8z5NoUFdAkBa0rouF/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz20bMpsm_T98Ap4x06T9Mp2aFU326xbkBPrh4daj4WdxEpIlBD6nf95m9wywKkiiW1/exec';
 
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
