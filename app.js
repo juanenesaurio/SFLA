@@ -253,14 +253,17 @@ async function cargarOrdenesCocina() {
 function renderCocina() {
   const grid = document.getElementById('gridCocina');
   
-  if (ordenesCocina.length === 0) {
+  // Filtrar órdenes canceladas
+  const ordenesActivas = ordenesCocina.filter(orden => orden.estado !== 'cancelada');
+  
+  if (ordenesActivas.length === 0) {
     grid.innerHTML = '<div class="col-span-full text-center text-gray-400 text-xl py-20">No hay órdenes</div>';
     return;
   }
 
   grid.innerHTML = '';
   
-  ordenesCocina.forEach((orden, index) => {
+  ordenesActivas.forEach((orden, index) => {
     const tarjeta = crearTarjetaCocinaCompacta(orden, index);
     grid.appendChild(tarjeta);
   });
@@ -293,9 +296,9 @@ function crearTarjetaCocinaCompacta(orden, index) {
     <!-- Emoji de estado -->
     <div class="text-4xl text-center mb-2">${emoji}</div>
     
-    <!-- Orden # y Mesa -->
+    <!-- Descripción y Mesa -->
     <div class="text-center">
-      <div class="text-lg font-bold">Orden #${orden.orden_id || orden.id}</div>
+      <div class="text-lg font-bold">${orden.descripcion || 'Sin descripción'}</div>
       <div class="text-xl font-bold">Mesa ${orden.mesa || 'N/A'}</div>
     </div>
     
@@ -370,7 +373,7 @@ function abrirDetalleOrdenCocina(index) {
         <div class="flex items-center gap-3">
           <div class="text-5xl">${emoji}</div>
           <div>
-            <div class="text-2xl font-bold">Orden #${orden.orden_id || orden.id}</div>
+            <div class="text-2xl font-bold">${orden.descripcion || 'Sin descripción'}</div>
             <div class="text-sm uppercase font-semibold opacity-75">Estado: ${estadoCocina}</div>
           </div>
         </div>
