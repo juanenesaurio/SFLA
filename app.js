@@ -225,6 +225,7 @@ async function irACocina() {
 /* ==================== COCINA ==================== */
 let ordenesCocina = [];
 let intervalActualizacionCocina = null;
+let ordenCocinaSeleccionada = null;
 
 // Cargar órdenes desde el backend para cocina
 async function cargarOrdenesCocina() {
@@ -248,25 +249,25 @@ async function cargarOrdenesCocina() {
   }
 }
 
-// Renderizar tarjetas de cocina
+// Renderizar tarjetas compactas de cocina (vista general)
 function renderCocina() {
   const grid = document.getElementById('gridCocina');
   
   if (ordenesCocina.length === 0) {
-    grid.innerHTML = '<div class="col-span-full text-center text-gray-400 text-xl">No hay órdenes</div>';
+    grid.innerHTML = '<div class="col-span-full text-center text-gray-400 text-xl py-20">No hay órdenes</div>';
     return;
   }
 
   grid.innerHTML = '';
   
-  ordenesCocina.forEach(orden => {
-    const tarjeta = crearTarjetaCocina(orden);
+  ordenesCocina.forEach((orden, index) => {
+    const tarjeta = crearTarjetaCocinaCompacta(orden, index);
     grid.appendChild(tarjeta);
   });
 }
 
-// Crear una tarjeta de orden para cocina
-function crearTarjetaCocina(orden) {
+// Crear tarjeta compacta (para el grid principal)
+function crearTarjetaCocinaCompacta(orden, index) {
   const div = document.createElement('div');
   
   // Color de fondo según estado de cocina
@@ -285,85 +286,177 @@ function crearTarjetaCocina(orden) {
   // Calcular semáforo de tiempo
   const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora);
   
-  div.className = `${bgColor} rounded-xl p-4 shadow-lg relative text-gray-900`;
-  
-  // Productos formateados
-  let productosHTML = '';
-  if (orden.productos && Array.isArray(orden.productos)) {
-    productosHTML = orden.productos.map(p => 
-      `<div class="text-sm">• ${p.nombre} ${p.cantidad > 1 ? `x${p.cantidad}` : ''}</div>`
-    ).join('');
-  }
+  div.className = `${bgColor} rounded-xl p-4 shadow-lg relative text-gray-900 cursor-pointer active:scale-95 transition`;
+  div.onclick = () => abrirDetalleOrdenCocina(index);
   
   div.innerHTML = `
-    <!-- Emoji de estado (esquina superior derecha) -->
-    <div class="absolute top-2 right-2 text-3xl">${emoji}</div>
+    <!-- Emoji de estado -->
+    <div class="text-4xl text-center mb-2">${emoji}</div>
     
-    <!-- Orden # -->
-    <div class="text-xl font-bold mb-2">Orden #${orden.orden_id || orden.id}</div>
-    
-    <!-- Estado de cocina -->
-    <div class="text-sm font-semibold mb-2 uppercase">Estado: ${estadoCocina}</div>
-    
-    <!-- Mesa -->
-    <div class="text-lg font-semibold mb-2">Mesa: ${orden.mesa || 'N/A'}</div>
-    
-    <!-- Hora -->
-    <div class="text-sm mb-3 opacity-75">
-      ${orden.hora_ultima_edicion ? new Date(orden.hora_ultima_edicion).toLocaleTimeString() : 'N/A'}
+    <!-- Orden # y Mesa -->
+    <div class="text-center">
+      <div class="text-lg font-bold">Orden #${orden.orden_id || orden.id}</div>
+      <div class="text-xl font-bold">Mesa ${orden.mesa || 'N/A'}</div>
     </div>
-    
-    <!-- Productos -->
-    <div class="mb-3 bg-black bg-opacity-10 rounded p-2">
-      <div class="font-semibold text-sm mb-1">Productos:</div>
-      ${productosHTML || '<div class="text-sm">Sin productos</div>'}
-    </div>
-    
-    <!-- Observaciones -->
-    ${orden.observaciones ? `
-      <div class="mb-3 bg-black bg-opacity-10 rounded p-2">
-        <div class="font-semibold text-sm mb-1">Observaciones:</div>
-        <div class="text-sm">${orden.observaciones}</div>
-      </div>
-    ` : ''}
     
     <!-- Semáforo de tiempo -->
-    <div class="flex items-center gap-2 mb-4 p-2 bg-black bg-opacity-10 rounded">
-      <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
-      <div class="text-sm font-semibold">${semaforoInfo.texto}</div>
-    </div>
-    
-    <!-- Botones de cambio de estado -->
-    <div class="flex gap-2 mt-4">
-      <button 
-        onclick="cambiarEstadoCocina('${orden.orden_id}', 'cocinando')"
-        class="flex-1 bg-orange-500 text-white py-2 px-3 rounded-lg font-semibold active:scale-95 transition">
-        COCINANDO
-      </button>
-      
-      <button 
-        onmousedown="activarCambioEstadoCocina('${orden.orden_id}', 'lista', this)"
-        onmouseup="cancelarCambioEstadoCocina()"
-        ontouchstart="activarCambioEstadoCocina('${orden.orden_id}', 'lista', this)"
-        ontouchend="cancelarCambioEstadoCocina()"
-        class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg font-semibold active:scale-95 transition relative">
-        <span class="relative z-10">LISTA (1.2s)</span>
-        <div class="progress-bar absolute bottom-0 left-0 h-1 bg-white opacity-50 rounded-b-lg transition-all" style="width: 0%"></div>
-      </button>
-      
-      <button 
-        onmousedown="activarCambioEstadoCocina('${orden.orden_id}', 'entregada', this)"
-        onmouseup="cancelarCambioEstadoCocina()"
-        ontouchstart="activarCambioEstadoCocina('${orden.orden_id}', 'entregada', this)"
-        ontouchend="cancelarCambioEstadoCocina()"
-        class="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg font-semibold active:scale-95 transition relative">
-        <span class="relative z-10">ENTREGADA (1.2s)</span>
-        <div class="progress-bar absolute bottom-0 left-0 h-1 bg-white opacity-50 rounded-b-lg transition-all" style="width: 0%"></div>
-      </button>
+    <div class="flex items-center justify-center gap-2 mt-3">
+      <div class="${semaforoInfo.circuloClass} w-3 h-3 rounded-full"></div>
     </div>
   `;
   
   return div;
+}
+
+// Abrir detalle de orden en modal
+function abrirDetalleOrdenCocina(index) {
+  ordenCocinaSeleccionada = index;
+  const orden = ordenesCocina[index];
+  const modal = document.getElementById('modalDetalleOrdenCocina');
+  const contenido = document.getElementById('contenidoDetalleOrdenCocina');
+  
+  // Color de fondo según estado
+  const estadoCocina = orden.cocina_estado || 'nueva';
+  let bgColor = 'bg-white';
+  let textColor = 'text-gray-900';
+  if (estadoCocina === 'cocinando') {
+    bgColor = 'bg-yellow-400';
+    textColor = 'text-gray-900';
+  } else if (estadoCocina === 'lista') {
+    bgColor = 'bg-blue-400';
+    textColor = 'text-white';
+  } else if (estadoCocina === 'entregada') {
+    bgColor = 'bg-green-400';
+    textColor = 'text-white';
+  }
+  
+  // Emoji según estado
+  let emoji = '🐣';
+  if (estadoCocina === 'cocinando') emoji = '🔥';
+  else if (estadoCocina === 'lista') emoji = '🛎️';
+  else if (estadoCocina === 'entregada') emoji = '🎉';
+  
+  // Calcular semáforo
+  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora);
+  
+  // Formatear productos CON EXTRAS
+  let productosHTML = '';
+  if (orden.productos && Array.isArray(orden.productos)) {
+    productosHTML = orden.productos.map(p => {
+      let extrasText = '';
+      if (p.extras) {
+        const parts = [];
+        if (p.extras.hamburguesa) parts.push(`🍔 ${p.extras.hamburguesa}`);
+        if (p.extras.burrito) parts.push(`🌯 ${p.extras.burrito}`);
+        if (p.extras.perrito) parts.push(`🌭 ${p.extras.perrito}`);
+        if (p.extras.papas) parts.push(`🍟 ${p.extras.papas}`);
+        if (p.extras.bebida) parts.push(`🍹 ${p.extras.bebida}`);
+        if (p.extras.consideracion) parts.push(`📝 ${p.extras.consideracion}`);
+        if (parts.length) {
+          extrasText = '<div class="ml-4 mt-1 text-sm opacity-90">' + parts.join('<br>') + '</div>';
+        }
+      }
+      return `<div class="mb-2 bg-black bg-opacity-10 p-2 rounded">
+        <div class="font-semibold">• ${p.nombre}${p.cantidad > 1 ? ` x${p.cantidad}` : ''}</div>
+        ${extrasText}
+      </div>`;
+    }).join('');
+  }
+  
+  contenido.innerHTML = `
+    <div class="${bgColor} ${textColor} p-6 rounded-xl">
+      <!-- Header con botón cerrar -->
+      <div class="flex justify-between items-start mb-4">
+        <div class="flex items-center gap-3">
+          <div class="text-5xl">${emoji}</div>
+          <div>
+            <div class="text-2xl font-bold">Orden #${orden.orden_id || orden.id}</div>
+            <div class="text-sm uppercase font-semibold opacity-75">Estado: ${estadoCocina}</div>
+          </div>
+        </div>
+        <button onclick="cerrarDetalleOrdenCocina()" 
+          class="text-3xl leading-none hover:opacity-70 transition">
+          ×
+        </button>
+      </div>
+      
+      <!-- Mesa y Hora -->
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="bg-black bg-opacity-10 p-3 rounded">
+          <div class="text-sm opacity-75">Mesa</div>
+          <div class="text-2xl font-bold">${orden.mesa || 'N/A'}</div>
+        </div>
+        <div class="bg-black bg-opacity-10 p-3 rounded">
+          <div class="text-sm opacity-75">Hora</div>
+          <div class="text-lg font-semibold">
+            ${orden.hora_ultima_edicion ? new Date(orden.hora_ultima_edicion).toLocaleTimeString() : 'N/A'}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Semáforo de tiempo -->
+      <div class="flex items-center gap-2 mb-4 p-3 bg-black bg-opacity-10 rounded">
+        <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
+        <div class="font-bold">${semaforoInfo.texto}</div>
+      </div>
+      
+      <!-- Productos -->
+      <div class="mb-4">
+        <div class="text-lg font-bold mb-2">🍽️ Productos:</div>
+        <div class="space-y-2">
+          ${productosHTML || '<div class="text-sm opacity-75">Sin productos</div>'}
+        </div>
+      </div>
+      
+      <!-- Observaciones -->
+      ${orden.observaciones ? `
+        <div class="mb-4 bg-black bg-opacity-10 p-3 rounded">
+          <div class="font-bold mb-1">📝 Observaciones:</div>
+          <div>${orden.observaciones}</div>
+        </div>
+      ` : ''}
+      
+      <!-- Botones de cambio de estado -->
+      <div class="grid grid-cols-1 gap-3 mt-6 pt-6 border-t border-black border-opacity-20">
+        <button 
+          onclick="cambiarEstadoCocinaOrden('cocinando')"
+          class="bg-orange-500 text-white py-4 px-4 rounded-xl font-bold text-lg active:scale-95 transition shadow-lg">
+          🔥 COCINANDO
+        </button>
+        
+        <button 
+          onmousedown="activarCambioEstadoCocinaOrden('lista', this)"
+          onmouseup="cancelarCambioEstadoCocina()"
+          onmouseleave="cancelarCambioEstadoCocina()"
+          ontouchstart="activarCambioEstadoCocinaOrden('lista', this)"
+          ontouchend="cancelarCambioEstadoCocina()"
+          class="bg-blue-600 text-white py-4 px-4 rounded-xl font-bold text-lg active:scale-95 transition relative overflow-hidden shadow-lg">
+          <span class="relative z-10">🛎️ LISTA (1.2s)</span>
+          <div class="progress-bar-cocina absolute bottom-0 left-0 h-1 bg-white opacity-50 transition-all" style="width: 0%"></div>
+        </button>
+        
+        <button 
+          onmousedown="activarCambioEstadoCocinaOrden('entregada', this)"
+          onmouseup="cancelarCambioEstadoCocina()"
+          onmouseleave="cancelarCambioEstadoCocina()"
+          ontouchstart="activarCambioEstadoCocinaOrden('entregada', this)"
+          ontouchend="cancelarCambioEstadoCocina()"
+          class="bg-green-600 text-white py-4 px-4 rounded-xl font-bold text-lg active:scale-95 transition relative overflow-hidden shadow-lg">
+          <span class="relative z-10">🎉 ENTREGADA (1.2s)</span>
+          <div class="progress-bar-cocina absolute bottom-0 left-0 h-1 bg-white opacity-50 transition-all" style="width: 0%"></div>
+        </button>
+      </div>
+    </div>
+  `;
+  
+  modal.classList.remove('hidden');
+}
+
+// Cerrar modal de detalle
+function cerrarDetalleOrdenCocina() {
+  document.getElementById('modalDetalleOrdenCocina').classList.add('hidden');
+  ordenCocinaSeleccionada = null;
+  cancelarCambioEstadoCocina();
 }
 
 // Calcular el semáforo de tiempo
@@ -399,19 +492,24 @@ function calcularSemaforo(horaOrden) {
 
 // Variables para press & hold
 let timerCambioEstadoCocina = null;
-let progressInterval = null;
+let progressIntervalCocina = null;
 
-// Cambio inmediato de estado (para COCINANDO)
-async function cambiarEstadoCocina(ordenId, nuevoEstado) {
+// Cambio de estado desde el modal (usa ordenCocinaSeleccionada)
+async function cambiarEstadoCocinaOrden(nuevoEstado) {
+  if (ordenCocinaSeleccionada === null) return;
+  
+  const orden = ordenesCocina[ordenCocinaSeleccionada];
+  
   try {
     const result = await fetchToGAS({
       action: 'cambiarEstadoCocina',
-      orden_id: ordenId,
+      orden_id: orden.orden_id,
       cocina_estado: nuevoEstado
     });
     
     if (result.ok) {
       await cargarOrdenesCocina();
+      cerrarDetalleOrdenCocina();
     } else {
       alert('Error al cambiar estado: ' + result.error);
     }
@@ -421,13 +519,13 @@ async function cambiarEstadoCocina(ordenId, nuevoEstado) {
   }
 }
 
-// Activar cambio de estado con press & hold
-function activarCambioEstadoCocina(ordenId, nuevoEstado, btn) {
-  const progressBar = btn.querySelector('.progress-bar');
+// Activar cambio de estado con press & hold desde modal
+function activarCambioEstadoCocinaOrden(nuevoEstado, btn) {
+  const progressBar = btn.querySelector('.progress-bar-cocina');
   let progress = 0;
   
   // Animación de progreso
-  progressInterval = setInterval(() => {
+  progressIntervalCocina = setInterval(() => {
     progress += 100 / 12; // 1200ms / 100ms intervals
     if (progress > 100) progress = 100;
     progressBar.style.width = progress + '%';
@@ -435,9 +533,9 @@ function activarCambioEstadoCocina(ordenId, nuevoEstado, btn) {
   
   // Timer de 1.2 segundos
   timerCambioEstadoCocina = setTimeout(async () => {
-    clearInterval(progressInterval);
+    clearInterval(progressIntervalCocina);
     progressBar.style.width = '0%';
-    await cambiarEstadoCocina(ordenId, nuevoEstado);
+    await cambiarEstadoCocinaOrden(nuevoEstado);
   }, 1200);
 }
 
@@ -447,13 +545,13 @@ function cancelarCambioEstadoCocina() {
     clearTimeout(timerCambioEstadoCocina);
     timerCambioEstadoCocina = null;
   }
-  if (progressInterval) {
-    clearInterval(progressInterval);
-    progressInterval = null;
+  if (progressIntervalCocina) {
+    clearInterval(progressIntervalCocina);
+    progressIntervalCocina = null;
   }
   
   // Resetear todas las barras de progreso
-  document.querySelectorAll('.progress-bar').forEach(bar => {
+  document.querySelectorAll('.progress-bar-cocina').forEach(bar => {
     bar.style.width = '0%';
   });
 }
