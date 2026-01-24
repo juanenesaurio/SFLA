@@ -1058,13 +1058,13 @@ function handleClickSencilla(event) {
     event.preventDefault();
     return;
   }
-  agregarProducto('Sencilla', 60);
+  agregarProducto('Hamburguesa sencilla', 60);
 }
 
 function confirmarPersonalizacionSencilla() {
   const val = document.getElementById('sencillaPersonalInput').value.trim();
   const extras = val ? { hamburguesa: val } : null;
-  agregarProducto('Sencilla', 60, { extras });
+  agregarProducto('Hamburguesa sencilla', 60, { extras });
   document.getElementById('sencillaPersonalInput').value = '';
   const box = document.getElementById('personalSencillaBox');
   if (box) box.classList.add('hidden');
@@ -1095,13 +1095,13 @@ function handleClickHawaiiana(event) {
     event.preventDefault();
     return;
   }
-  agregarProducto('Hawaiiana', 75);
+  agregarProducto('Hamburguesa hawaiiana', 75);
 }
 
 function confirmarPersonalizacionHawaiiana() {
   const val = document.getElementById('hawaiianaPersonalInput').value.trim();
   const extras = val ? { hamburguesa: val } : null;
-  agregarProducto('Hawaiiana', 75, { extras });
+  agregarProducto('Hamburguesa hawaiiana', 75, { extras });
   document.getElementById('hawaiianaPersonalInput').value = '';
   const box = document.getElementById('personalHawaiianaBox');
   if (box) box.classList.add('hidden');
@@ -1132,13 +1132,13 @@ function handleClickEspecial(event) {
     event.preventDefault();
     return;
   }
-  agregarProducto('Especial', 90);
+  agregarProducto('Hamburguesa especial', 90);
 }
 
 function confirmarPersonalizacionEspecial() {
   const val = document.getElementById('especialPersonalInput').value.trim();
   const extras = val ? { hamburguesa: val } : null;
-  agregarProducto('Especial', 90, { extras });
+  agregarProducto('Hamburguesa especial', 90, { extras });
   document.getElementById('especialPersonalInput').value = '';
   const box = document.getElementById('personalEspecialBox');
   if (box) box.classList.add('hidden');
