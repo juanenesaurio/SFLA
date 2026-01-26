@@ -357,6 +357,8 @@ function abrirDetalleOrdenCocina(index) {
         if (p.extras.perrito) parts.push(`🌭 ${p.extras.perrito}`);
         if (p.extras.papas) parts.push(`🍟 ${p.extras.papas}`);
         if (p.extras.bebida) parts.push(`🍹 ${p.extras.bebida}`);
+        if (p.extras.ramen) parts.push(`🍜 ${p.extras.ramen}`);
+        if (p.extras.birriamen) parts.push(`🍜 ${p.extras.birriamen}`);
         if (p.extras.consideracion) parts.push(`📝 ${p.extras.consideracion}`);
         if (parts.length) {
           extrasText = '<div class="ml-4 mt-1 text-sm opacity-90">' + parts.join('<br>') + '</div>';
@@ -1712,7 +1714,16 @@ function handleClickBirriamen(event) {
 
 function confirmarRamenIndividual(nombre, precio, inputId, formId) {
   const personalizacion = document.getElementById(inputId).value.trim();
-  const extras = personalizacion ? { ramen: personalizacion } : null;
+  
+  // Guardar con la clave correcta según el producto
+  let extras = null;
+  if (personalizacion) {
+    if (nombre === 'Ramen') {
+      extras = { ramen: personalizacion };
+    } else if (nombre === 'Birriamen') {
+      extras = { birriamen: personalizacion };
+    }
+  }
   
   agregarProducto(nombre, precio, {
     category: 'ramen_individual',
@@ -1753,6 +1764,8 @@ function renderCarrito() {
       if (item.extras.perrito) parts.push(`Perrito: ${item.extras.perrito}`);
       if (item.extras.papas) parts.push(`Papas: ${item.extras.papas}`);
       if (item.extras.bebida) parts.push(`Bebida: ${item.extras.bebida}`);
+      if (item.extras.ramen) parts.push(`Ramen: ${item.extras.ramen}`);
+      if (item.extras.birriamen) parts.push(`Birriamen: ${item.extras.birriamen}`);
       if (item.extras.consideracion) parts.push(`Nota: ${item.extras.consideracion}`);
       if (parts.length) extrasText = ' — ' + parts.join(', ');
     }
