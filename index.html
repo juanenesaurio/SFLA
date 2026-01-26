@@ -230,7 +230,7 @@
       🌭
     </button>
 
-    <button onclick="toggleCombosPeatos()"
+    <button onclick="toggleCombosPerritos()"
       class="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center
              active:scale-90 transition">
       <div class="text-center text-2xl leading-none flex flex-col items-center">
@@ -696,11 +696,11 @@
     </div>
   </div>
 
-  <!-- Menú Combos Perritos Calientes -->
-  <div id="menuCombosperritos" class="hidden mt-4 space-y-3">
+  <!-- Menú Combos Peatos (Perritos Calientes) -->
+  <div id="menuCombosPerritos" class="hidden mt-4 space-y-3">
     <!-- Orden Perritos Sencilla -->
     <div class="flex gap-2">
-      <button onclick="abrirCombosperritos('Orden perritos sencilla',45)"
+      <button onclick="abrirComboPerritos('Orden perritos sencilla',45)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
         Orden perritos sencilla — $45
       </button>
@@ -723,7 +723,7 @@
 
     <!-- Orden Perritos Especiales -->
     <div class="flex gap-2">
-      <button onclick="abrirComboPeato('Orden perritos especiales',65)"
+      <button onclick="abrirComboPerritos('Orden perritos especiales',65)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
         Orden perritos especiales — $65
       </button>
@@ -746,7 +746,7 @@
 
     <!-- Combo Perritos Sencillos -->
     <div class="flex gap-2">
-      <button onclick="abrirComboPeato('Combo perritos sencillos',95)"
+      <button onclick="abrirComboPerritos('Combo perritos sencillos',95)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
         Combo perritos sencillos — $95
       </button>
@@ -769,7 +769,7 @@
 
     <!-- Combo Perritos Especiales -->
     <div class="flex gap-2">
-      <button onclick="abrirComboPeato('Combo perritos especiales',110)"
+      <button onclick="abrirComboPerritos('Combo perritos especiales',110)"
         class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
         Combo perritos especiales — $110
       </button>
@@ -790,38 +790,38 @@
       </div>
     </div>
 
-    <!-- Formulario de personalización del combo peato -->
-    <div id="comboPeatoForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+    <!-- Formulario de personalización del combo perritos -->
+    <div id="comboPerritosForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
       <div class="mb-3">
         <label class="text-sm mb-2 block">🌭 Perrito cachondo:</label>
         <div class="flex gap-2">
-          <input id="peatoInput" placeholder="" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-          <button onclick="confirmarPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          <input id="perritosInput" placeholder="" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarPerritos()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
         </div>
       </div>
 
-      <div id="seccionPapasPeato" class="mb-3 hidden">
+      <div id="seccionPapasPerritos" class="mb-3 hidden">
         <label class="text-sm mb-2 block">🍟Papas:</label>
         <div class="flex gap-2">
-          <input id="papasPeatoInput" placeholder="¿Que llevarán las papas?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-          <button onclick="confirmarPapasPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          <input id="papasPerritosInput" placeholder="¿Que llevarán las papas?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarPapasPerritos()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
         </div>
       </div>
 
-      <div id="seccionBebidaPeato" class="mb-3 hidden">
+      <div id="seccionBebidaPerritos" class="mb-3 hidden">
         <label class="text-sm mb-2 block">🍹bebida</label>
         <div class="flex gap-2 mb-2">
-          <button id="bebidaPeatoJ" onclick="seleccionarBebidaPeato('Jamaica')" class="px-3 py-2 bg-gray-700 rounded">Jamaica</button>
-          <button id="bebidaPeatoH" onclick="seleccionarBebidaPeato('Horchata')" class="px-3 py-2 bg-gray-700 rounded">Horchata</button>
+          <button id="bebidaPerritosJ" onclick="seleccionarBebidaPerritos('Jamaica')" class="px-3 py-2 bg-gray-700 rounded">Jamaica</button>
+          <button id="bebidaPerritosH" onclick="seleccionarBebidaPerritos('Horchata')" class="px-3 py-2 bg-gray-700 rounded">Horchata</button>
         </div>
         <div class="flex gap-2">
-          <input id="bebidaPeatoInput" placeholder="¿De que tamaño será el agua?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-          <button onclick="confirmarBebidaPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          <input id="bebidaPerritosInput" placeholder="¿De que tamaño será el agua?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+          <button onclick="confirmarBebidaPerritos()" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
         </div>
       </div>
 
       <div class="text-right">
-        <button onclick="confirmarComboPeato()" class="px-4 py-2 bg-green-600 rounded">Confirmar combo</button>
+        <button onclick="confirmarComboPerritos()" class="px-4 py-2 bg-green-600 rounded">Confirmar combo</button>
       </div>
     </div>
   </div>

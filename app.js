@@ -97,8 +97,8 @@ let selectedCombo = null;
 let selectedExtras = {};
 let selectedComboBurrito = null;
 let selectedExtrasBurrito = {};
-let selectedComboPeato = null;
-let selectedExtrasPeato = {};
+let selectedComboPerritos = null;
+let selectedExtrasPerritos = {};
 let selectedBurritoSencillo = null;
 let selectedExtrasBurritoSencillo = {};
 let selectedPerritoIndividual = null;
@@ -695,8 +695,8 @@ function limpiarFormulario() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
@@ -761,8 +761,8 @@ function toggleHamburguesas() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
@@ -790,8 +790,8 @@ function toggleBurritoSencillo() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById("menuPerritosIndividuales").classList.add("hidden");
   document.getElementById("menuRamen").classList.add("hidden");
@@ -823,8 +823,8 @@ function toggleCombos() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
@@ -859,8 +859,8 @@ function toggleCombosBurrito() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("papasForm").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
@@ -889,7 +889,7 @@ function toggleCombosBurrito() {
   document.getElementById("menuCombosBurrito").classList.toggle("hidden");
 }
 
-function toggleCombosPeatos() {
+function toggleCombosPerritos() {
   document.getElementById("menuHamburguesas").classList.add("hidden");
   document.getElementById("menuCombos").classList.add("hidden");
   document.getElementById("comboForm").classList.add("hidden");
@@ -921,7 +921,7 @@ function toggleCombosPeatos() {
   document.getElementById("perritoEspecialForm").classList.add("hidden");
   document.getElementById("ramenForm").classList.add("hidden");
   document.getElementById("birriamenForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.toggle("hidden");
+  document.getElementById("menuCombosPerritos").classList.toggle("hidden");
 }
 
 function togglePapasForm() {
@@ -930,8 +930,8 @@ function togglePapasForm() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
@@ -966,8 +966,8 @@ function toggleBebidas() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
@@ -1006,8 +1006,8 @@ function togglePerritosIndividuales() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
@@ -1042,8 +1042,8 @@ function toggleRamen() {
   document.getElementById("comboForm").classList.add("hidden");
   document.getElementById("menuCombosBurrito").classList.add("hidden");
   document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPeatos").classList.add("hidden");
-  document.getElementById("comboPeatoForm").classList.add("hidden");
+  document.getElementById("menuCombosPerritos").classList.add("hidden");
+  document.getElementById("comboPerritosForm").classList.add("hidden");
   document.getElementById("menuBurritoSencillo").classList.add("hidden");
   document.getElementById("burritoPastorForm").classList.add("hidden");
   document.getElementById("burritoChorizoForm").classList.add("hidden");
@@ -1402,96 +1402,98 @@ function confirmarComboBurrito() {
 }
 
 /* Combos Peatos (Perritos Calientes) */
-function abrirComboPeato(nombre, precio) {
+function abrirComboPerritos(nombre, precio) {
   // Obtener la cantidad según el combo que se abrió
   let cantidadSeleccionada = 1;
-  if (nombre === 'Orden sencilla') {
+  if (nombre === 'Orden perritos sencilla') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadOrdenSencilla').value);
-  } else if (nombre === 'Combo perritos calientes') {
+  } else if (nombre === 'Orden perritos especiales') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadOrdenEspeciales').value);
+  } else if (nombre === 'Combo perritos sencillos') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPerritos').value);
-  } else if (nombre === 'Combo especiales') {
+  } else if (nombre === 'Combo perritos especiales') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboEspeciales').value);
   }
   
-  selectedComboPeato = { nombre, precio, cantidad: cantidadSeleccionada };
-  selectedExtrasPeato = {};
-  document.getElementById('comboPeatoForm').classList.remove('hidden');
+  selectedComboPerritos = { nombre, precio, cantidad: cantidadSeleccionada };
+  selectedExtrasPerritos = {};
+  document.getElementById('comboPerritosForm').classList.remove('hidden');
   
   // Mostrar/ocultar secciones según el tipo de combo
-  const seccionPapas = document.getElementById('seccionPapasPeato');
-  const seccionBebida = document.getElementById('seccionBebidaPeato');
+  const seccionPapas = document.getElementById('seccionPapasPerritos');
+  const seccionBebida = document.getElementById('seccionBebidaPerritos');
   
-  if (nombre === 'Orden sencilla') {
+  if (nombre === 'Orden perritos sencilla' || nombre === 'Orden perritos especiales') {
     // Solo mostrar el campo de perritos
     seccionPapas.classList.add('hidden');
     seccionBebida.classList.add('hidden');
-    document.getElementById('peatoInput').placeholder = '¿Que llevarán los perritos con tinder?';
+    document.getElementById('perritosInput').placeholder = '¿Que llevarán los perritos con tinder?';
   } else {
     // Mostrar todos los campos
     seccionPapas.classList.remove('hidden');
     seccionBebida.classList.remove('hidden');
-    document.getElementById('peatoInput').placeholder = '¿Que llevarán los perritos con tinder?';
+    document.getElementById('perritosInput').placeholder = '¿Que llevarán los perritos con tinder?';
   }
   
-  document.getElementById('peatoInput').value = '';
-  document.getElementById('peatoInput').disabled = false;
-  document.getElementById('papasPeatoInput').value = '';
-  document.getElementById('papasPeatoInput').disabled = false;
-  document.getElementById('bebidaPeatoInput').value = '';
-  document.getElementById('bebidaPeatoInput').disabled = false;
-  document.getElementById('bebidaPeatoJ').classList.remove('ring-2');
-  document.getElementById('bebidaPeatoH').classList.remove('ring-2');
+  document.getElementById('perritosInput').value = '';
+  document.getElementById('perritosInput').disabled = false;
+  document.getElementById('papasPerritosInput').value = '';
+  document.getElementById('papasPerritosInput').disabled = false;
+  document.getElementById('bebidaPerritosInput').value = '';
+  document.getElementById('bebidaPerritosInput').disabled = false;
+  document.getElementById('bebidaPerritosJ').classList.remove('ring-2');
+  document.getElementById('bebidaPerritosH').classList.remove('ring-2');
 }
 
-function confirmarPeato() {
-  const peato = document.getElementById('peatoInput').value.trim();
-  if (peato) {
-    selectedExtrasPeato.perrito = peato;
-    document.getElementById('peatoInput').value = '✓ ' + peato;
-    document.getElementById('peatoInput').disabled = true;
+function confirmarPerritos() {
+  const perritos = document.getElementById('perritosInput').value.trim();
+  if (perritos) {
+    selectedExtrasPerritos.perrito = perritos;
+    document.getElementById('perritosInput').value = '✓ ' + perritos;
+    document.getElementById('perritosInput').disabled = true;
   }
 }
 
-function confirmarPapasPeato() {
-  const papas = document.getElementById('papasPeatoInput').value.trim();
+function confirmarPapasPerritos() {
+  const papas = document.getElementById('papasPerritosInput').value.trim();
   if (papas) {
-    selectedExtrasPeato.papas = papas;
-    document.getElementById('papasPeatoInput').value = '✓ ' + papas;
-    document.getElementById('papasPeatoInput').disabled = true;
+    selectedExtrasPerritos.papas = papas;
+    document.getElementById('papasPerritosInput').value = '✓ ' + papas;
+    document.getElementById('papasPerritosInput').disabled = true;
   }
 }
 
-function seleccionarBebidaPeato(nombre) {
-  selectedExtrasPeato.bebida = nombre;
-  document.getElementById('bebidaPeatoJ').classList.toggle('ring-2', nombre === 'Jamaica');
-  document.getElementById('bebidaPeatoH').classList.toggle('ring-2', nombre === 'Horchata');
+function seleccionarBebidaPerritos(nombre) {
+  selectedExtrasPerritos.bebida = nombre;
+  document.getElementById('bebidaPerritosJ').classList.toggle('ring-2', nombre === 'Jamaica');
+  document.getElementById('bebidaPerritosH').classList.toggle('ring-2', nombre === 'Horchata');
 }
 
-function confirmarBebidaPeato() {
-  const bebida = document.getElementById('bebidaPeatoInput').value.trim();
+function confirmarBebidaPerritos() {
+  const bebida = document.getElementById('bebidaPerritosInput').value.trim();
   if (bebida) {
-    selectedExtrasPeato.consideracion = bebida;
-    document.getElementById('bebidaPeatoInput').value = '✓ ' + bebida;
-    document.getElementById('bebidaPeatoInput').disabled = true;
+    selectedExtrasPerritos.consideracion = bebida;
+    document.getElementById('bebidaPerritosInput').value = '✓ ' + bebida;
+    document.getElementById('bebidaPerritosInput').disabled = true;
   }
 }
 
-function confirmarComboPeato() {
-  if (!selectedComboPeato) return;
+function confirmarComboPerritos() {
+  if (!selectedComboPerritos) return;
   
-  const cantidad = selectedComboPeato.cantidad || 1;
+  const cantidad = selectedComboPerritos.cantidad || 1;
   
   // Agregar el combo multiplicado por la cantidad
   for (let i = 0; i < cantidad; i++) {
-    agregarProducto(selectedComboPeato.nombre, selectedComboPeato.precio, {
+    agregarProducto(selectedComboPerritos.nombre, selectedComboPerritos.precio, {
       category: 'combo',
-      extras: Object.keys(selectedExtrasPeato).length > 0 ? selectedExtrasPeato : null
+      extras: Object.keys(selectedExtrasPerritos).length > 0 ? selectedExtrasPerritos : null
     });
   }
   
-  document.getElementById('comboPeatoForm').classList.add('hidden');
-  selectedComboPeato = null;
-  selectedExtrasPeato = {};
+  document.getElementById('comboPerritosForm').classList.add('hidden');
+  selectedComboPerritos = null;
+  selectedExtrasPerritos = {};
 }
 
 /* Funciones para Burrito Individual con long-press */
