@@ -227,8 +227,6 @@ let ordenesCocina = [];
 let intervalActualizacionCocina = null;
 let ordenCocinaSeleccionada = null;
 let intervalContadorTiempo = null;
-let intervalContadorTiempo = null;
-let intervalContadorTiempo = null;
 
 // Cargar órdenes desde el backend para cocina
 async function cargarOrdenesCocina() {
@@ -1647,22 +1645,6 @@ function handleClickPerritoEspecial(event) {
   agregarProducto('Especial', 25);
 }
 
-function confirmarPerritoIndividual(nombre, precio, inputId, formId) {
-  const personalizacion = document.getElementById(inputId).value.trim();
-  const extras = personalizacion ? { perrito: personalizacion } : null;
-  
-  agregarProducto(nombre, precio, {
-    category: 'perrito_individual',
-    extras: extras
-  });
-  
-  // Limpiar y ocultar el formulario específico
-  document.getElementById(inputId).value = '';
-  document.getElementById(formId).classList.add('hidden');
-  document.getElementById('menuBurritoSencillo').classList.add('hidden');
-  renderCarrito();
-}
-
 function abrirPerritoIndividual(nombre, precio) {
   // Ocultar todos los formularios de perrito
   const forms = ['perritoSencilloForm', 'perritoEspecialForm'];
@@ -1695,8 +1677,8 @@ function confirmarPerritoIndividual(nombre, precio, inputId, formId) {
   document.getElementById(formId).classList.add('hidden');
   
   // Resetear flags
-  if (nombre === 'Sencillo') longPressTriggeredPerritoSencillo = false;
-  else if (nombre === 'Especial') longPressTriggeredPerritoEspecial = false;
+  if (nombre === 'Perrito sencillo') longPressTriggeredPerritoSencillo = false;
+  else if (nombre === 'Perrito especial') longPressTriggeredPerritoEspecial = false;
 }
 
 /* Ramen Individual */
