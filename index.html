@@ -314,29 +314,6 @@
 
   <!-- Menú Burritos Individuales -->
   <div id="menuBurritoSencillo" class="hidden mt-4 space-y-3">
-    <!-- Pastor -->
-    <div>
-      <button
-        onclick="handleClickBurritoPastor(event)"
-        onmousedown="activarPersonalizacionBurritoPastor()"
-        onmouseup="cancelarPersonalizacionBurritoPastor()"
-        onmouseleave="cancelarPersonalizacionBurritoPastor()"
-        ontouchstart="activarPersonalizacionBurritoPastor()"
-        ontouchend="cancelarPersonalizacionBurritoPastor()"
-        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-        Pastor — $28
-      </button>
-      <div id="burritoPastorForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
-        <div class="mb-3">
-          <label class="text-sm mb-2 block">🌯 Burrito:</label>
-          <div class="flex gap-2">
-            <input id="burritoPastorInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-            <button onclick="confirmarBurritoIndividual('Pastor', 28, 'burritoPastorInput', 'burritoPastorForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Chorizo -->
     <div>
       <button
@@ -347,14 +324,37 @@
         ontouchstart="activarPersonalizacionBurritoChorizo()"
         ontouchend="cancelarPersonalizacionBurritoChorizo()"
         class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-        Chorizo — $28
+        Burrito chorizo — $28
       </button>
       <div id="burritoChorizoForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
         <div class="mb-3">
           <label class="text-sm mb-2 block">🌯 Burrito:</label>
           <div class="flex gap-2">
             <input id="burritoChorizoInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-            <button onclick="confirmarBurritoIndividual('Chorizo', 28, 'burritoChorizoInput', 'burritoChorizoForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+            <button onclick="confirmarBurritoIndividual('Burrito chorizo', 28, 'burritoChorizoInput', 'burritoChorizoForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pastor -->
+    <div>
+      <button
+        onclick="handleClickBurritoPastor(event)"
+        onmousedown="activarPersonalizacionBurritoPastor()"
+        onmouseup="cancelarPersonalizacionBurritoPastor()"
+        onmouseleave="cancelarPersonalizacionBurritoPastor()"
+        ontouchstart="activarPersonalizacionBurritoPastor()"
+        ontouchend="cancelarPersonalizacionBurritoPastor()"
+        class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
+        Burrito pastor — $32
+      </button>
+      <div id="burritoPastorForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
+        <div class="mb-3">
+          <label class="text-sm mb-2 block">🌯 Burrito:</label>
+          <div class="flex gap-2">
+            <input id="burritoPastorInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
+            <button onclick="confirmarBurritoIndividual('Burrito pastor', 32, 'burritoPastorInput', 'burritoPastorForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
           </div>
         </div>
       </div>
@@ -370,14 +370,14 @@
         ontouchstart="activarPersonalizacionBurritoArrachera()"
         ontouchend="cancelarPersonalizacionBurritoArrachera()"
         class="w-full bg-gray-800 py-4 rounded-xl active:scale-95">
-        Arrachera — $30
+        Burrito arrachera — $32
       </button>
       <div id="burritoArracheraForm" class="hidden mt-2 p-4 bg-gray-800 rounded-xl">
         <div class="mb-3">
           <label class="text-sm mb-2 block">🌯 Burrito:</label>
           <div class="flex gap-2">
             <input id="burritoArracheraInput" placeholder="¿Que llevará el burrón?" class="flex-1 p-2 rounded bg-gray-900 text-white placeholder-gray-400" >
-            <button onclick="confirmarBurritoIndividual('Arrachera', 30, 'burritoArracheraInput', 'burritoArracheraForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
+            <button onclick="confirmarBurritoIndividual('Burrito arrachera', 32, 'burritoArracheraInput', 'burritoArracheraForm')" class="px-4 py-2 bg-green-600 rounded">Confirmar</button>
           </div>
         </div>
       </div>
