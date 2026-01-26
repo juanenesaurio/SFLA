@@ -1677,8 +1677,8 @@ function confirmarPerritoIndividual(nombre, precio, inputId, formId) {
   document.getElementById(formId).classList.add('hidden');
   
   // Resetear flags
-  if (nombre === 'Perrito sencillo') longPressTriggeredPerritoSencillo = false;
-  else if (nombre === 'Perrito especial') longPressTriggeredPerritoEspecial = false;
+  if (nombre === 'Perritos sencillos') longPressTriggeredPerritoSencillo = false;
+  else if (nombre === 'Perritos especiales') longPressTriggeredPerritoEspecial = false;
 }
 
 /* Ramen Individual */
