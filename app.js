@@ -263,9 +263,12 @@ function renderCocina() {
 
   grid.innerHTML = '';
   
-  ordenesActivas.forEach((orden, index) => {
-    const tarjeta = crearTarjetaCocinaCompacta(orden, index);
-    grid.appendChild(tarjeta);
+  ordenesCocina.forEach((orden, index) => {
+    // Solo mostrar si no está cancelada
+    if (orden.estado !== 'cancelada') {
+      const tarjeta = crearTarjetaCocinaCompacta(orden, index);
+      grid.appendChild(tarjeta);
+    }
   });
 }
 
@@ -471,16 +474,25 @@ function calcularSemaforo(horaOrden, estadoCocina, horaCreacion) {
     };
   }
   
-  // Si está entregada, mostrar tiempo de entrega
+  // Si está entregada, mostrar tiempo de entrega solo si es razonable
   if (estadoCocina === 'entregada' && horaCreacion) {
     const horaCreacionDate = new Date(horaCreacion);
     const horaEntregaDate = new Date(horaOrden);
     const tiempoEntregaMinutos = Math.floor((horaEntregaDate - horaCreacionDate) / 1000 / 60);
     
-    return {
-      circuloClass: 'bg-green-500',
-      texto: `⏱️ Tiempo de entrega: ${tiempoEntregaMinutos} min`
-    };
+    // Si el tiempo es razonable (menos de 2 horas), mostrarlo
+    if (tiempoEntregaMinutos < 120) {
+      return {
+        circuloClass: 'bg-green-500',
+        texto: `⏱️ Tiempo de entrega: ${tiempoEntregaMinutos} min`
+      };
+    } else {
+      // Si pasó mucho tiempo (orden vieja), solo mostrar que está entregada
+      return {
+        circuloClass: 'bg-green-500',
+        texto: '✅ Entregada'
+      };
+    }
   }
   
   // Para el resto de estados, calcular tiempo transcurrido
