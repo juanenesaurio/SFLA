@@ -409,7 +409,7 @@ function abrirDetalleOrdenCocina(index) {
           <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
           <div class="font-bold">${semaforoInfo.texto}</div>
         </div>
-        <div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>
+        ${estadoCocina !== 'entregada' ? '<div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>' : ''}
       </div>
       
       <!-- Productos -->
@@ -463,9 +463,9 @@ function abrirDetalleOrdenCocina(index) {
   
   modal.classList.remove('hidden');
   
-  // Iniciar contador de tiempo en vivo
+  // Iniciar contador de tiempo en vivo solo si no está entregada
   const horaCreacion = orden.hora_creacion || orden.hora;
-  if (horaCreacion) {
+  if (horaCreacion && estadoCocina !== 'entregada') {
     actualizarContadorTiempo(horaCreacion);
     intervalContadorTiempo = setInterval(() => {
       actualizarContadorTiempo(horaCreacion);
@@ -1405,19 +1405,37 @@ function confirmarComboBurrito() {
 function abrirComboPerritos(nombre, precio) {
   // Obtener la cantidad según el combo que se abrió
   let cantidadSeleccionada = 1;
+  let targetContainer = '';
+  
   if (nombre === 'Orden perritos sencilla') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadOrdenSencilla').value);
+    targetContainer = 'formOrdenSencilla';
   } else if (nombre === 'Orden perritos especiales') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadOrdenEspeciales').value);
+    targetContainer = 'formOrdenEspecial';
   } else if (nombre === 'Combo perritos sencillos') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPerritos').value);
+    targetContainer = 'formComboSencillos';
   } else if (nombre === 'Combo perritos especiales') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboEspeciales').value);
+    targetContainer = 'formComboEspeciales';
   }
   
   selectedComboPerritos = { nombre, precio, cantidad: cantidadSeleccionada };
   selectedExtrasPerritos = {};
-  document.getElementById('comboPerritosForm').classList.remove('hidden');
+  
+  // Ocultar todos los contenedores de formularios
+  document.getElementById('formOrdenSencilla').classList.add('hidden');
+  document.getElementById('formOrdenEspecial').classList.add('hidden');
+  document.getElementById('formComboSencillos').classList.add('hidden');
+  document.getElementById('formComboEspeciales').classList.add('hidden');
+  
+  // Mover el formulario al contenedor correcto
+  const formulario = document.getElementById('comboPerritosForm');
+  const container = document.getElementById(targetContainer);
+  container.appendChild(formulario);
+  container.classList.remove('hidden');
+  formulario.classList.remove('hidden');
   
   // Mostrar/ocultar secciones según el tipo de combo
   const seccionPapas = document.getElementById('seccionPapasPerritos');
@@ -1492,6 +1510,10 @@ function confirmarComboPerritos() {
   }
   
   document.getElementById('comboPerritosForm').classList.add('hidden');
+  document.getElementById('formOrdenSencilla').classList.add('hidden');
+  document.getElementById('formOrdenEspecial').classList.add('hidden');
+  document.getElementById('formComboSencillos').classList.add('hidden');
+  document.getElementById('formComboEspeciales').classList.add('hidden');
   selectedComboPerritos = null;
   selectedExtrasPerritos = {};
 }
@@ -2055,9 +2077,11 @@ function mostrarDetallesOrden(indice) {
         const parts = [];
         if (prod.extras.hamburguesa) parts.push(`Hamburguesa: ${prod.extras.hamburguesa}`);
         if (prod.extras.burrito) parts.push(`Burrito: ${prod.extras.burrito}`);
-        if (prod.extras.peato) parts.push(`Peato: ${prod.extras.peato}`);
+        if (prod.extras.perrito) parts.push(`Perrito: ${prod.extras.perrito}`);
         if (prod.extras.papas) parts.push(`Papas: ${prod.extras.papas}`);
         if (prod.extras.bebida) parts.push(`Bebida: ${prod.extras.bebida}`);
+        if (prod.extras.ramen) parts.push(`Ramen: ${prod.extras.ramen}`);
+        if (prod.extras.birriamen) parts.push(`Birriamen: ${prod.extras.birriamen}`);
         if (prod.extras.consideracion) parts.push(`Nota: ${prod.extras.consideracion}`);
         if (parts.length) extrasText = ' — ' + parts.join(', ');
       }

@@ -699,95 +699,107 @@
   <!-- Menú Combos Peatos (Perritos Calientes) -->
   <div id="menuCombosPerritos" class="hidden mt-4 space-y-3">
     <!-- Orden Perritos Sencilla -->
-    <div class="flex gap-2">
-      <button onclick="abrirComboPerritos('Orden perritos sencilla',45)"
-        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        Orden perritos sencilla — $45
-      </button>
-      <div class="relative">
-        <select id="cantidadOrdenSencilla" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
-          <option value="1">x1</option>
-          <option value="2">x2</option>
-          <option value="3">x3</option>
-          <option value="4">x4</option>
-          <option value="5">x5</option>
-          <option value="6">x6</option>
-          <option value="7">x7</option>
-          <option value="8">x8</option>
-          <option value="9">x9</option>
-          <option value="10">x10</option>
-        </select>
-        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+    <div>
+      <div class="flex gap-2">
+        <button onclick="abrirComboPerritos('Orden perritos sencilla',45)"
+          class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+          Orden perritos sencilla — $45
+        </button>
+        <div class="relative">
+          <select id="cantidadOrdenSencilla" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+            <option value="1">x1</option>
+            <option value="2">x2</option>
+            <option value="3">x3</option>
+            <option value="4">x4</option>
+            <option value="5">x5</option>
+            <option value="6">x6</option>
+            <option value="7">x7</option>
+            <option value="8">x8</option>
+            <option value="9">x9</option>
+            <option value="10">x10</option>
+          </select>
+          <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+        </div>
       </div>
+      <div id="formOrdenSencilla" class="hidden"></div>
     </div>
 
     <!-- Orden Perritos Especiales -->
-    <div class="flex gap-2">
-      <button onclick="abrirComboPerritos('Orden perritos especiales',65)"
-        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        Orden perritos especiales — $65
-      </button>
-      <div class="relative">
-        <select id="cantidadOrdenEspeciales" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
-          <option value="1">x1</option>
-          <option value="2">x2</option>
-          <option value="3">x3</option>
-          <option value="4">x4</option>
-          <option value="5">x5</option>
-          <option value="6">x6</option>
-          <option value="7">x7</option>
-          <option value="8">x8</option>
-          <option value="9">x9</option>
-          <option value="10">x10</option>
-        </select>
-        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+    <div>
+      <div class="flex gap-2">
+        <button onclick="abrirComboPerritos('Orden perritos especiales',65)"
+          class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+          Orden perritos especiales — $65
+        </button>
+        <div class="relative">
+          <select id="cantidadOrdenEspeciales" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+            <option value="1">x1</option>
+            <option value="2">x2</option>
+            <option value="3">x3</option>
+            <option value="4">x4</option>
+            <option value="5">x5</option>
+            <option value="6">x6</option>
+            <option value="7">x7</option>
+            <option value="8">x8</option>
+            <option value="9">x9</option>
+            <option value="10">x10</option>
+          </select>
+          <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+        </div>
       </div>
+      <div id="formOrdenEspecial" class="hidden"></div>
     </div>
 
     <!-- Combo Perritos Sencillos -->
-    <div class="flex gap-2">
-      <button onclick="abrirComboPerritos('Combo perritos sencillos',95)"
-        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        Combo perritos sencillos — $95
-      </button>
-      <div class="relative">
-        <select id="cantidadComboPerritos" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
-          <option value="1">x1</option>
-          <option value="2">x2</option>
-          <option value="3">x3</option>
-          <option value="4">x4</option>
-          <option value="5">x5</option>
-          <option value="6">x6</option>
-          <option value="7">x7</option>
-          <option value="8">x8</option>
-          <option value="9">x9</option>
-          <option value="10">x10</option>
-        </select>
-        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+    <div>
+      <div class="flex gap-2">
+        <button onclick="abrirComboPerritos('Combo perritos sencillos',95)"
+          class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+          Combo perritos sencillos — $95
+        </button>
+        <div class="relative">
+          <select id="cantidadComboPerritos" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+            <option value="1">x1</option>
+            <option value="2">x2</option>
+            <option value="3">x3</option>
+            <option value="4">x4</option>
+            <option value="5">x5</option>
+            <option value="6">x6</option>
+            <option value="7">x7</option>
+            <option value="8">x8</option>
+            <option value="9">x9</option>
+            <option value="10">x10</option>
+          </select>
+          <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+        </div>
       </div>
+      <div id="formComboSencillos" class="hidden"></div>
     </div>
 
     <!-- Combo Perritos Especiales -->
-    <div class="flex gap-2">
-      <button onclick="abrirComboPerritos('Combo perritos especiales',110)"
-        class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
-        Combo perritos especiales — $110
-      </button>
-      <div class="relative">
-        <select id="cantidadComboEspeciales" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
-          <option value="1">x1</option>
-          <option value="2">x2</option>
-          <option value="3">x3</option>
-          <option value="4">x4</option>
-          <option value="5">x5</option>
-          <option value="6">x6</option>
-          <option value="7">x7</option>
-          <option value="8">x8</option>
-          <option value="9">x9</option>
-          <option value="10">x10</option>
-        </select>
-        <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+    <div>
+      <div class="flex gap-2">
+        <button onclick="abrirComboPerritos('Combo perritos especiales',110)"
+          class="flex-1 bg-gray-800 py-4 rounded-xl active:scale-95">
+          Combo perritos especiales — $110
+        </button>
+        <div class="relative">
+          <select id="cantidadComboEspeciales" class="bg-red-600 text-white px-3 py-4 rounded-xl font-semibold appearance-none cursor-pointer active:scale-95">
+            <option value="1">x1</option>
+            <option value="2">x2</option>
+            <option value="3">x3</option>
+            <option value="4">x4</option>
+            <option value="5">x5</option>
+            <option value="6">x6</option>
+            <option value="7">x7</option>
+            <option value="8">x8</option>
+            <option value="9">x9</option>
+            <option value="10">x10</option>
+          </select>
+          <span class="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2 text-white">▼</span>
+        </div>
       </div>
+      <div id="formComboEspeciales" class="hidden"></div>
     </div>
 
     <!-- Formulario de personalización del combo perritos -->
