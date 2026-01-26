@@ -226,6 +226,9 @@ async function irACocina() {
 let ordenesCocina = [];
 let intervalActualizacionCocina = null;
 let ordenCocinaSeleccionada = null;
+let intervalContadorTiempo = null;
+let intervalContadorTiempo = null;
+let intervalContadorTiempo = null;
 
 // Cargar órdenes desde el backend para cocina
 async function cargarOrdenesCocina() {
@@ -403,9 +406,12 @@ function abrirDetalleOrdenCocina(index) {
       </div>
       
       <!-- Semáforo de tiempo -->
-      <div class="flex items-center gap-2 mb-4 p-3 bg-black bg-opacity-10 rounded">
-        <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
-        <div class="font-bold">${semaforoInfo.texto}</div>
+      <div class="flex items-center justify-between gap-2 mb-4 p-3 bg-black bg-opacity-10 rounded">
+        <div class="flex items-center gap-2">
+          <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
+          <div class="font-bold">${semaforoInfo.texto}</div>
+        </div>
+        <div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>
       </div>
       
       <!-- Productos -->
@@ -458,6 +464,15 @@ function abrirDetalleOrdenCocina(index) {
   `;
   
   modal.classList.remove('hidden');
+  
+  // Iniciar contador de tiempo en vivo
+  const horaCreacion = orden.hora_creacion || orden.hora;
+  if (horaCreacion) {
+    actualizarContadorTiempo(horaCreacion);
+    intervalContadorTiempo = setInterval(() => {
+      actualizarContadorTiempo(horaCreacion);
+    }, 1000);
+  }
 }
 
 // Cerrar modal de detalle
@@ -465,6 +480,27 @@ function cerrarDetalleOrdenCocina() {
   document.getElementById('modalDetalleOrdenCocina').classList.add('hidden');
   ordenCocinaSeleccionada = null;
   cancelarCambioEstadoCocina();
+  
+  // Detener contador de tiempo
+  if (intervalContadorTiempo) {
+    clearInterval(intervalContadorTiempo);
+    intervalContadorTiempo = null;
+  }
+}
+
+// Actualizar contador de tiempo en vivo
+function actualizarContadorTiempo(horaCreacion) {
+  const elemento = document.getElementById('contadorTiempo');
+  if (!elemento) return;
+  
+  const ahora = new Date();
+  const inicio = new Date(horaCreacion);
+  const diferenciaSegundos = Math.floor((ahora - inicio) / 1000);
+  
+  const minutos = Math.floor(diferenciaSegundos / 60);
+  const segundos = diferenciaSegundos % 60;
+  
+  elemento.textContent = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 }
 
 // Calcular el semáforo de tiempo
