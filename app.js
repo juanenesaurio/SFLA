@@ -287,7 +287,7 @@ function crearTarjetaCocinaCompacta(orden, index) {
   else if (estadoCocina === 'entregada') emoji = '🎉';
   
   // Calcular semáforo de tiempo
-  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora);
+  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora, estadoCocina, orden.hora_creacion || orden.hora);
   
   div.className = `${bgColor} rounded-xl p-4 shadow-lg relative text-gray-900 cursor-pointer active:scale-95 transition`;
   div.onclick = () => abrirDetalleOrdenCocina(index);
@@ -340,7 +340,7 @@ function abrirDetalleOrdenCocina(index) {
   else if (estadoCocina === 'entregada') emoji = '🎉';
   
   // Calcular semáforo
-  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora);
+  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora, estadoCocina, orden.hora_creacion || orden.hora);
   
   // Formatear productos CON EXTRAS
   let productosHTML = '';
@@ -463,7 +463,7 @@ function cerrarDetalleOrdenCocina() {
 }
 
 // Calcular el semáforo de tiempo
-function calcularSemaforo(horaOrden) {
+function calcularSemaforo(horaOrden, estadoCocina, horaCreacion) {
   if (!horaOrden) {
     return {
       circuloClass: 'bg-gray-400',
@@ -471,6 +471,19 @@ function calcularSemaforo(horaOrden) {
     };
   }
   
+  // Si está entregada, mostrar tiempo de entrega
+  if (estadoCocina === 'entregada' && horaCreacion) {
+    const horaCreacionDate = new Date(horaCreacion);
+    const horaEntregaDate = new Date(horaOrden);
+    const tiempoEntregaMinutos = Math.floor((horaEntregaDate - horaCreacionDate) / 1000 / 60);
+    
+    return {
+      circuloClass: 'bg-green-500',
+      texto: `⏱️ Tiempo de entrega: ${tiempoEntregaMinutos} min`
+    };
+  }
+  
+  // Para el resto de estados, calcular tiempo transcurrido
   const ahora = new Date();
   const horaOrdenDate = new Date(horaOrden);
   const diferenciaMinutos = (ahora - horaOrdenDate) / 1000 / 60;
