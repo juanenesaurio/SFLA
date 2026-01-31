@@ -409,7 +409,7 @@ function abrirDetalleOrdenCocina(index) {
           <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
           <div class="font-bold">${semaforoInfo.texto}</div>
         </div>
-        ${estadoCocina !== 'entregada' ? '<div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>' : ''}
+        ${(estadoCocina === 'cocinando' || estadoCocina === 'lista') ? '<div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>' : ''}
       </div>
       
       <!-- Productos -->
@@ -463,13 +463,25 @@ function abrirDetalleOrdenCocina(index) {
   
   modal.classList.remove('hidden');
   
-  // Iniciar contador de tiempo en vivo solo si no está entregada
+  // Iniciar contador de tiempo en vivo según el estado
   const horaCreacion = orden.hora_creacion || orden.hora;
-  if (horaCreacion && estadoCocina !== 'entregada') {
-    actualizarContadorTiempo(horaCreacion);
-    intervalContadorTiempo = setInterval(() => {
+  if (horaCreacion) {
+    if (estadoCocina === 'lista' && orden.tiempo_pausado) {
+      // Si está en LISTA y tiene tiempo pausado, mostrar ese tiempo sin actualizar
+      const elemento = document.getElementById('contadorTiempo');
+      if (elemento) {
+        const minutos = Math.floor(orden.tiempo_pausado / 60);
+        const segundos = orden.tiempo_pausado % 60;
+        elemento.textContent = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+      }
+    } else if (estadoCocina === 'cocinando') {
+      // Si está en COCINANDO, iniciar timer desde 0
       actualizarContadorTiempo(horaCreacion);
-    }, 1000);
+      intervalContadorTiempo = setInterval(() => {
+        actualizarContadorTiempo(horaCreacion);
+      }, 1000);
+    }
+    // Si está entregada, no mostrar timer (ya se filtra en el HTML)
   }
 }
 
@@ -563,12 +575,29 @@ async function cambiarEstadoCocinaOrden(nuevoEstado) {
   if (ordenCocinaSeleccionada === null) return;
   
   const orden = ordenesCocina[ordenCocinaSeleccionada];
+  const estadoActual = orden.cocina_estado || 'nueva';
+  
+  let tiempoPausado = null;
+  let resetearHoraCreacion = false;
+  
+  if (nuevoEstado === 'lista') {
+    // Al pasar a LISTA, calcular y guardar el tiempo transcurrido
+    const horaCreacion = new Date(orden.hora_creacion || orden.hora);
+    const ahora = new Date();
+    tiempoPausado = Math.floor((ahora - horaCreacion) / 1000);
+  } else if (nuevoEstado === 'cocinando') {
+    // Al pasar a COCINANDO (desde cualquier estado), resetear hora_creacion para empezar desde 0
+    resetearHoraCreacion = true;
+    tiempoPausado = null;
+  }
   
   try {
     const result = await fetchToGAS({
       action: 'cambiarEstadoCocina',
       orden_id: orden.orden_id,
-      cocina_estado: nuevoEstado
+      cocina_estado: nuevoEstado,
+      tiempo_pausado: tiempoPausado,
+      resetear_hora_creacion: resetearHoraCreacion
     });
     
     if (result.ok) {
@@ -690,21 +719,8 @@ function limpiarFormulario() {
   if (ta) ta.value = '';
 
   document.getElementById('descripcionBox').classList.add('hidden');
-  document.getElementById("menuHamburguesas").classList.add("hidden");
-  document.getElementById("menuCombos").classList.add("hidden");
-  document.getElementById("comboForm").classList.add("hidden");
-  document.getElementById("menuCombosBurrito").classList.add("hidden");
-  document.getElementById("comboBurritoForm").classList.add("hidden");
-  document.getElementById("menuCombosPerritos").classList.add("hidden");
-  document.getElementById("comboPerritosForm").classList.add("hidden");
-  document.getElementById("papasForm").classList.add("hidden");
-  document.getElementById("menuBurritoSencillo").classList.add("hidden");
-  document.getElementById("burritoPastorForm").classList.add("hidden");
-  document.getElementById("burritoChorizoForm").classList.add("hidden");
-  document.getElementById("burritoArracheraForm").classList.add("hidden");
-  document.getElementById("menuRamen").classList.add("hidden");
-  document.getElementById("ramenForm").classList.add("hidden");
-  document.getElementById("birriamenForm").classList.add("hidden");
+  // NO ocultamos los menús aquí - deben empezar ocultos en el HTML
+  // y solo mostrarse cuando el usuario hace clic en los botones de categorías
   document.getElementById('bebidaJ').classList.remove('ring-2');
   document.getElementById('bebidaH').classList.remove('ring-2');
   const psBox = document.getElementById('personalSencillaBox');
@@ -1077,17 +1093,38 @@ function toggleRamen() {
 function abrirCombo(nombre, precio) {
   // Obtener la cantidad según el combo que se abrió
   let cantidadSeleccionada = 1;
-  if (nombre === 'Combo Sencilla') {
+  let targetContainerId = '';
+  
+  if (nombre === 'Combo hamburguesas sencillas') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboSencilla').value);
-  } else if (nombre === 'Combo Hawaiiana') {
+    targetContainerId = 'formComboSencilla';
+  } else if (nombre === 'Combo hamburguesas hawaiianas') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboHawaiiana').value);
-  } else if (nombre === 'Combo Especial') {
+    targetContainerId = 'formComboHawaiiana';
+  } else if (nombre === 'Combo hamburguesas especiales') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboEspecial').value);
+    targetContainerId = 'formComboEspecial';
   }
   
   selectedCombo = { nombre, precio, cantidad: cantidadSeleccionada };
   selectedExtras = {};
-  document.getElementById('comboForm').classList.remove('hidden');
+  
+  // Obtener el formulario
+  const comboForm = document.getElementById('comboForm');
+  
+  // Limpiar todos los contenedores
+  document.getElementById('formComboSencilla').innerHTML = '';
+  document.getElementById('formComboHawaiiana').innerHTML = '';
+  document.getElementById('formComboEspecial').innerHTML = '';
+  
+  // Mover el formulario al contenedor correcto
+  const targetContainer = document.getElementById(targetContainerId);
+  if (comboForm && targetContainer) {
+    targetContainer.appendChild(comboForm);
+    comboForm.classList.remove('hidden');
+  }
+  
+  // Limpiar y resetear campos
   document.getElementById('hamburguesiInput').value = '';
   document.getElementById('hamburguesiInput').disabled = false;
   document.getElementById('papasInput').value = '';
@@ -1329,17 +1366,38 @@ function confirmarCombo() {
 function abrirComboBurrito(nombre, precio) {
   // Obtener la cantidad según el combo que se abrió
   let cantidadSeleccionada = 1;
-  if (nombre === 'Combo Pastor') {
-    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPastor').value);
-  } else if (nombre === 'Combo Chorizo') {
+  let targetContainerId = '';
+  
+  if (nombre === 'Combo burritos chorizo') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboChorizo').value);
-  } else if (nombre === 'Combo Arrachera') {
+    targetContainerId = 'formComboChorizo';
+  } else if (nombre === 'Combo burritos pastor') {
+    cantidadSeleccionada = parseInt(document.getElementById('cantidadComboPastor').value);
+    targetContainerId = 'formComboPastor';
+  } else if (nombre === 'Combo burritos arrachera') {
     cantidadSeleccionada = parseInt(document.getElementById('cantidadComboArrachera').value);
+    targetContainerId = 'formComboArrachera';
   }
   
   selectedComboBurrito = { nombre, precio, cantidad: cantidadSeleccionada };
   selectedExtrasBurrito = {};
-  document.getElementById('comboBurritoForm').classList.remove('hidden');
+  
+  // Obtener el formulario
+  const comboBurritoForm = document.getElementById('comboBurritoForm');
+  
+  // Limpiar todos los contenedores
+  document.getElementById('formComboChorizo').innerHTML = '';
+  document.getElementById('formComboPastor').innerHTML = '';
+  document.getElementById('formComboArrachera').innerHTML = '';
+  
+  // Mover el formulario al contenedor correcto
+  const targetContainer = document.getElementById(targetContainerId);
+  if (comboBurritoForm && targetContainer) {
+    targetContainer.appendChild(comboBurritoForm);
+    comboBurritoForm.classList.remove('hidden');
+  }
+  
+  // Limpiar y resetear campos
   document.getElementById('burritoInput').value = '';
   document.getElementById('burritoInput').disabled = false;
   document.getElementById('papasBurritoInput').value = '';
