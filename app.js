@@ -396,10 +396,25 @@ function abrirDetalleOrdenCocina(index) {
           <div class="text-2xl font-bold">${orden.mesa || 'N/A'}</div>
         </div>
         <div class="bg-black bg-opacity-10 p-3 rounded">
-          <div class="text-sm opacity-75">Hora</div>
-          <div class="text-lg font-semibold">
-            ${orden.hora_ultima_edicion ? new Date(orden.hora_ultima_edicion).toLocaleTimeString() : 'N/A'}
-          </div>
+          <div class="text-sm opacity-75">⏰ Hora</div>
+          ${estadoCocina === 'cocinando' || estadoCocina === 'lista' || estadoCocina === 'entregada' ? `
+            <div class="space-y-1">
+              <div class="text-xs opacity-75">Hora creación:</div>
+              <div class="text-sm font-bold">
+                ${orden.hora_creacion ? new Date(orden.hora_creacion).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
+              </div>
+              ${estadoCocina === 'cocinando' || estadoCocina === 'lista' ? `
+                <div class="text-xs opacity-75 mt-2">Inicio cocción:</div>
+                <div class="text-sm font-bold">
+                  ${orden.hora_ultima_edicion ? new Date(orden.hora_ultima_edicion).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
+                </div>
+              ` : ''}
+            </div>
+          ` : `
+            <div class="text-lg font-semibold">
+              ${orden.hora_ultima_edicion ? new Date(orden.hora_ultima_edicion).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
+            </div>
+          `}
         </div>
       </div>
       
