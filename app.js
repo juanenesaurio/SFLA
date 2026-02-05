@@ -293,6 +293,22 @@ function crearTarjetaCocinaCompacta(orden, index) {
   // Calcular semáforo de tiempo
   const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora, estadoCocina, orden.hora_inicio_coccion || orden.hora_creacion || orden.hora);
   
+  // Calcular tiempo de entrega si está entregada
+  let tiempoEntregaHTML = '';
+  if (estadoCocina === 'entregada' && orden.hora_inicio_coccion && orden.hora_entregada) {
+    const inicio = new Date(orden.hora_inicio_coccion);
+    const fin = new Date(orden.hora_entregada);
+    const diff = Math.floor((fin - inicio) / 1000);
+    const mins = Math.floor(diff / 60);
+    const secs = diff % 60;
+    tiempoEntregaHTML = `
+      <div class="text-center mt-3">
+        <div class="text-xs opacity-75">Tiempo de entrega</div>
+        <div class="text-lg font-bold font-mono">${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}</div>
+      </div>
+    `;
+  }
+  
   div.className = `${bgColor} rounded-xl p-4 shadow-lg relative text-gray-900 cursor-pointer active:scale-95 transition`;
   div.onclick = () => abrirDetalleOrdenCocina(index);
   
@@ -306,10 +322,12 @@ function crearTarjetaCocinaCompacta(orden, index) {
       <div class="text-xl font-bold">Mesa ${orden.mesa || 'N/A'}</div>
     </div>
     
-    <!-- Semáforo de tiempo -->
-    <div class="flex items-center justify-center gap-2 mt-3">
-      <div class="${semaforoInfo.circuloClass} w-3 h-3 rounded-full"></div>
-    </div>
+    ${estadoCocina === 'entregada' ? tiempoEntregaHTML : `
+      <!-- Semáforo de tiempo -->
+      <div class="flex items-center justify-center gap-2 mt-3">
+        <div class="${semaforoInfo.circuloClass} w-3 h-3 rounded-full"></div>
+      </div>
+    `}
   `;
   
   return div;
