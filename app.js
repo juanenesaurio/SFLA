@@ -218,6 +218,16 @@ function volverAMenu() {
 async function irACocina() {
   ocultarTodo();
   document.getElementById("menuCocina").classList.remove("hidden");
+  
+  // Solicitar permisos de notificación si no se han solicitado
+  if ('Notification' in window && Notification.permission === 'default') {
+    try {
+      await Notification.requestPermission();
+    } catch (error) {
+      console.log('No se pudieron solicitar permisos de notificación');
+    }
+  }
+  
   await cargarOrdenesCocina();
   iniciarActualizacionCocina();
 }
@@ -227,6 +237,53 @@ let ordenesCocina = [];
 let intervalActualizacionCocina = null;
 let ordenCocinaSeleccionada = null;
 let intervalContadorTiempo = null;
+let ordenesAnteriores = []; // Para detectar nuevas órdenes
+
+// Función para reproducir sonido de campanita
+function reproducirCampanita() {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Crear oscilador para la campanita
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Configurar sonido de campanita (tono agudo)
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+    
+    // Envelope para que suene como campanita
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+    
+    // Segunda nota para efecto de campanita
+    setTimeout(() => {
+      const osc2 = audioContext.createOscillator();
+      const gain2 = audioContext.createGain();
+      
+      osc2.connect(gain2);
+      gain2.connect(audioContext.destination);
+      
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(1000, audioContext.currentTime);
+      
+      gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
+      gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+      
+      osc2.start(audioContext.currentTime);
+      osc2.stop(audioContext.currentTime + 0.4);
+    }, 100);
+    
+  } catch (error) {
+    console.error('Error al reproducir sonido:', error);
+  }
+}
 
 // Cargar órdenes desde el backend para cocina
 async function cargarOrdenesCocina() {
@@ -236,7 +293,36 @@ async function cargarOrdenesCocina() {
     });
     
     if (result.ok && result.ordenes) {
-      ordenesCocina = result.ordenes;
+      const ordenesNuevas = result.ordenes;
+      
+      // Detectar si hay nuevas órdenes (solo órdenes con estado 'nueva')
+      if (ordenesAnteriores.length > 0) {
+        const idsAnteriores = ordenesAnteriores
+          .filter(o => o.cocina_estado === 'nueva')
+          .map(o => o.orden_id);
+        
+        const nuevasOrdenesDetectadas = ordenesNuevas.filter(o => 
+          o.cocina_estado === 'nueva' && !idsAnteriores.includes(o.orden_id)
+        );
+        
+        // Si hay nuevas órdenes, reproducir campanita
+        if (nuevasOrdenesDetectadas.length > 0) {
+          console.log(`🔔 ${nuevasOrdenesDetectadas.length} nueva(s) orden(es) detectada(s)`);
+          reproducirCampanita();
+          
+          // Mostrar notificación visual (opcional)
+          if (Notification.permission === 'granted') {
+            new Notification('🔔 Nueva orden en cocina', {
+              body: `${nuevasOrdenesDetectadas.length} orden(es) nueva(s)`,
+              icon: '🍽️'
+            });
+          }
+        }
+      }
+      
+      // Actualizar arrays
+      ordenesAnteriores = JSON.parse(JSON.stringify(ordenesNuevas));
+      ordenesCocina = ordenesNuevas;
       renderCocina();
     } else {
       console.error('Error al cargar órdenes de cocina:', result.error);
