@@ -1,5 +1,5 @@
 // URL del backend de Google Apps Script
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz6WQGvj3UHsNUwixY-jaLbpgkVx7p2hkuFjwWmOWrF63SXp0O9H7fI3rFANj2gaYxN/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyDXTxaxj9Bo2zn1LcTPFxL18gmQYreF-SCDVM5LxbDuWKrvcBPV1DOBpZxxHUPNJRY/exec';
 
 // Función auxiliar para hacer fetch a Google Apps Script
 async function fetchToGAS(data) {
@@ -291,7 +291,7 @@ function crearTarjetaCocinaCompacta(orden, index) {
   else if (estadoCocina === 'entregada') emoji = '🎉';
   
   // Calcular semáforo de tiempo
-  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora, estadoCocina, orden.hora_creacion || orden.hora);
+  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora, estadoCocina, orden.hora_inicio_coccion || orden.hora_creacion || orden.hora);
   
   div.className = `${bgColor} rounded-xl p-4 shadow-lg relative text-gray-900 cursor-pointer active:scale-95 transition`;
   div.onclick = () => abrirDetalleOrdenCocina(index);
@@ -344,7 +344,7 @@ function abrirDetalleOrdenCocina(index) {
   else if (estadoCocina === 'entregada') emoji = '🎉';
   
   // Calcular semáforo
-  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora, estadoCocina, orden.hora_creacion || orden.hora);
+  const semaforoInfo = calcularSemaforo(orden.hora_ultima_edicion || orden.hora, estadoCocina, orden.hora_inicio_coccion || orden.hora_creacion || orden.hora);
   
   // Formatear productos CON EXTRAS
   let productosHTML = '';
@@ -397,35 +397,55 @@ function abrirDetalleOrdenCocina(index) {
         </div>
         <div class="bg-black bg-opacity-10 p-3 rounded">
           <div class="text-sm opacity-75">⏰</div>
-          ${estadoCocina === 'cocinando' || estadoCocina === 'lista' || estadoCocina === 'entregada' ? `
-            <div class="space-y-1">
-              <div class="text-xs opacity-75">Hora creación:</div>
+          <div class="space-y-1">
+            <div class="text-xs opacity-75">Hora creación:</div>
+            <div class="text-sm font-bold">
+              ${(orden.hora_creacion || orden.hora) ? new Date(orden.hora_creacion || orden.hora).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
+            </div>
+            ${estadoCocina === 'cocinando' || estadoCocina === 'lista' || estadoCocina === 'entregada' ? `
+              <div class="text-xs opacity-75 mt-2">🍳 Inicio cocción:</div>
               <div class="text-sm font-bold">
-                ${(orden.hora_creacion || orden.hora) ? new Date(orden.hora_creacion || orden.hora).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
+                ${orden.hora_inicio_coccion ? new Date(orden.hora_inicio_coccion).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
               </div>
-              ${estadoCocina === 'cocinando' || estadoCocina === 'lista' ? `
-                <div class="text-xs opacity-75 mt-2">🍳 Inicio cocción:</div>
-                <div class="text-sm font-bold">
-                  ${orden.hora_ultima_edicion ? new Date(orden.hora_ultima_edicion).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
-                </div>
-              ` : ''}
-            </div>
-          ` : `
-            <div class="text-lg font-semibold">
-              ${(orden.hora_ultima_edicion || orden.hora) ? new Date(orden.hora_ultima_edicion || orden.hora).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
-            </div>
-          `}
+            ` : ''}
+            ${estadoCocina === 'lista' || estadoCocina === 'entregada' ? `
+              <div class="text-xs opacity-75 mt-2">🛎️ Lista a las:</div>
+              <div class="text-sm font-bold">
+                ${orden.hora_lista ? new Date(orden.hora_lista).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
+              </div>
+            ` : ''}
+            ${estadoCocina === 'entregada' ? `
+              <div class="text-xs opacity-75 mt-2">🎉 Entregada:</div>
+              <div class="text-sm font-bold">
+                ${orden.hora_entregada ? new Date(orden.hora_entregada).toLocaleTimeString('es-MX', { hour12: false }) : 'N/A'}
+              </div>
+            ` : ''}
+          </div>
         </div>
       </div>
       
-      <!-- Semáforo de tiempo -->
-      <div class="flex items-center justify-between gap-2 mb-4 p-3 bg-black bg-opacity-10 rounded">
-        <div class="flex items-center gap-2">
-          <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
-          <div class="font-bold">${semaforoInfo.texto}</div>
+      <!-- Semáforo de tiempo o Resumen entregada -->
+      ${estadoCocina === 'entregada' && orden.hora_inicio_coccion && orden.hora_entregada ? `
+        <div class="flex items-center justify-between gap-2 mb-4 p-3 bg-black bg-opacity-10 rounded">
+          <div class="font-bold">🎉 Entregada en:</div>
+          <div class="text-xl font-mono font-bold">${(() => {
+            const inicio = new Date(orden.hora_inicio_coccion);
+            const fin = new Date(orden.hora_entregada);
+            const diff = Math.floor((fin - inicio) / 1000);
+            const mins = Math.floor(diff / 60);
+            const secs = diff % 60;
+            return String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+          })()}</div>
         </div>
-        ${(estadoCocina === 'cocinando' || estadoCocina === 'lista') ? '<div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>' : ''}
-      </div>
+      ` : `
+        <div class="flex items-center justify-between gap-2 mb-4 p-3 bg-black bg-opacity-10 rounded">
+          <div class="flex items-center gap-2">
+            <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
+            <div class="font-bold">${semaforoInfo.texto}</div>
+          </div>
+          ${(estadoCocina === 'cocinando' || estadoCocina === 'lista') ? '<div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>' : ''}
+        </div>
+      `}
       
       <!-- Productos -->
       <div class="mb-4">
@@ -479,8 +499,8 @@ function abrirDetalleOrdenCocina(index) {
   modal.classList.remove('hidden');
   
   // Iniciar contador de tiempo en vivo según el estado
-  const horaCreacion = orden.hora_creacion || orden.hora;
-  if (horaCreacion) {
+  const horaInicioCoccion = orden.hora_inicio_coccion;
+  if (horaInicioCoccion) {
     if (estadoCocina === 'lista' && orden.tiempo_pausado) {
       // Si está en LISTA y tiene tiempo pausado, mostrar ese tiempo sin actualizar
       const elemento = document.getElementById('contadorTiempo');
@@ -490,13 +510,13 @@ function abrirDetalleOrdenCocina(index) {
         elemento.textContent = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
       }
     } else if (estadoCocina === 'cocinando') {
-      // Si está en COCINANDO, iniciar timer desde 0
-      actualizarContadorTiempo(horaCreacion);
+      // Si está en COCINANDO, iniciar timer desde hora_inicio_coccion
+      actualizarContadorTiempo(horaInicioCoccion);
       intervalContadorTiempo = setInterval(() => {
-        actualizarContadorTiempo(horaCreacion);
+        actualizarContadorTiempo(horaInicioCoccion);
       }, 1000);
     }
-    // Si está entregada, no mostrar timer (ya se filtra en el HTML)
+    // Si está entregada, no mostrar timer (ya se muestra el resumen)
   }
 }
 
@@ -594,16 +614,28 @@ async function cambiarEstadoCocinaOrden(nuevoEstado) {
   
   let tiempoPausado = null;
   let resetearHoraCreacion = false;
+  const ahora = new Date().toISOString();
   
-  if (nuevoEstado === 'lista') {
-    // Al pasar a LISTA, calcular y guardar el tiempo transcurrido
-    const horaCreacion = new Date(orden.hora_creacion || orden.hora);
-    const ahora = new Date();
-    tiempoPausado = Math.floor((ahora - horaCreacion) / 1000);
-  } else if (nuevoEstado === 'cocinando') {
-    // Al pasar a COCINANDO (desde cualquier estado), resetear hora_creacion para empezar desde 0
-    resetearHoraCreacion = true;
+  // Preparar datos según el nuevo estado
+  let horaInicioCoccion = orden.hora_inicio_coccion || null;
+  let horaLista = orden.hora_lista || null;
+  let horaEntregada = orden.hora_entregada || null;
+  
+  if (nuevoEstado === 'cocinando') {
+    // Al pasar a COCINANDO, guardar hora de inicio de cocción
+    horaInicioCoccion = ahora;
     tiempoPausado = null;
+  } else if (nuevoEstado === 'lista') {
+    // Al pasar a LISTA, guardar hora de lista y calcular tiempo transcurrido
+    horaLista = ahora;
+    if (orden.hora_inicio_coccion) {
+      const inicio = new Date(orden.hora_inicio_coccion);
+      const fin = new Date(ahora);
+      tiempoPausado = Math.floor((fin - inicio) / 1000);
+    }
+  } else if (nuevoEstado === 'entregada') {
+    // Al pasar a ENTREGADA, guardar hora de entregada
+    horaEntregada = ahora;
   }
   
   try {
@@ -612,7 +644,10 @@ async function cambiarEstadoCocinaOrden(nuevoEstado) {
       orden_id: orden.orden_id,
       cocina_estado: nuevoEstado,
       tiempo_pausado: tiempoPausado,
-      resetear_hora_creacion: resetearHoraCreacion
+      resetear_hora_creacion: resetearHoraCreacion,
+      hora_inicio_coccion: horaInicioCoccion,
+      hora_lista: horaLista,
+      hora_entregada: horaEntregada
     });
     
     if (result.ok) {
