@@ -296,7 +296,8 @@ async function cargarOrdenesCocina() {
       const ordenesNuevas = result.ordenes;
       
       // Detectar si hay nuevas órdenes (solo órdenes con estado 'nueva')
-      if (ordenesAnteriores.length > 0) {
+      // Solo detectar si ya teníamos órdenes cargadas previamente
+      if (ordenesAnteriores && ordenesAnteriores.length > 0) {
         const idsAnteriores = ordenesAnteriores
           .filter(o => o.cocina_estado === 'nueva')
           .map(o => o.orden_id);
@@ -311,18 +312,19 @@ async function cargarOrdenesCocina() {
           reproducirCampanita();
           
           // Mostrar notificación visual (opcional)
-          if (Notification.permission === 'granted') {
+          if ('Notification' in window && Notification.permission === 'granted') {
             new Notification('🔔 Nueva orden en cocina', {
-              body: `${nuevasOrdenesDetectadas.length} orden(es) nueva(s)`,
-              icon: '🍽️'
+              body: `${nuevasOrdenesDetectadas.length} orden(es) nueva(s)`
             });
           }
         }
       }
       
-      // Actualizar arrays
+      // SIEMPRE actualizar los arrays primero, antes de renderizar
       ordenesAnteriores = JSON.parse(JSON.stringify(ordenesNuevas));
       ordenesCocina = ordenesNuevas;
+      
+      // Luego renderizar
       renderCocina();
     } else {
       console.error('Error al cargar órdenes de cocina:', result.error);
