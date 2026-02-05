@@ -239,49 +239,104 @@ let ordenCocinaSeleccionada = null;
 let intervalContadorTiempo = null;
 let ordenesAnteriores = []; // Para detectar nuevas órdenes
 
-// Función para reproducir sonido de campanita
+// Función para reproducir sonido de campanita (tono dulce)
 function reproducirCampanita() {
   try {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     
-    // Crear oscilador para la campanita
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    // Melodía dulce de 3 notas ascendentes (Do-Mi-Sol)
+    const notas = [
+      { freq: 523.25, time: 0, duration: 0.15 },      // Do5
+      { freq: 659.25, time: 0.12, duration: 0.15 },   // Mi5
+      { freq: 783.99, time: 0.24, duration: 0.25 }    // Sol5
+    ];
     
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    // Configurar sonido de campanita (tono agudo)
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-    
-    // Envelope para que suene como campanita
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
-    
-    // Segunda nota para efecto de campanita
-    setTimeout(() => {
-      const osc2 = audioContext.createOscillator();
-      const gain2 = audioContext.createGain();
-      
-      osc2.connect(gain2);
-      gain2.connect(audioContext.destination);
-      
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(1000, audioContext.currentTime);
-      
-      gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
-      gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-      
-      osc2.start(audioContext.currentTime);
-      osc2.stop(audioContext.currentTime + 0.4);
-    }, 100);
+    notas.forEach(nota => {
+      setTimeout(() => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(nota.freq, audioContext.currentTime);
+        
+        // Envelope suave
+        gain.gain.setValueAtTime(0, audioContext.currentTime);
+        gain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + nota.duration);
+        
+        osc.start(audioContext.currentTime);
+        osc.stop(audioContext.currentTime + nota.duration);
+      }, nota.time * 1000);
+    });
     
   } catch (error) {
     console.error('Error al reproducir sonido:', error);
+  }
+}
+
+// Función para reproducir sonido de estufa (click-whoosh)
+function reproducirSonidoEstufa() {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // FASE 1: Click de encendido (ruido blanco corto)
+    const bufferSize = audioContext.sampleRate * 0.05;
+    const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    
+    const noise = audioContext.createBufferSource();
+    const noiseGain = audioContext.createGain();
+    const noiseFilter = audioContext.createBiquadFilter();
+    
+    noise.buffer = noiseBuffer;
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.setValueAtTime(2000, audioContext.currentTime);
+    
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(audioContext.destination);
+    
+    noiseGain.gain.setValueAtTime(0.3, audioContext.currentTime);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+    
+    noise.start(audioContext.currentTime);
+    noise.stop(audioContext.currentTime + 0.05);
+    
+    // FASE 2: Whoosh de gas (tono bajo con subida)
+    setTimeout(() => {
+      const whoosh = audioContext.createOscillator();
+      const whooshGain = audioContext.createGain();
+      const whooshFilter = audioContext.createBiquadFilter();
+      
+      whoosh.type = 'sawtooth';
+      whoosh.frequency.setValueAtTime(80, audioContext.currentTime);
+      whoosh.frequency.exponentialRampToValueAtTime(120, audioContext.currentTime + 0.3);
+      
+      whooshFilter.type = 'lowpass';
+      whooshFilter.frequency.setValueAtTime(400, audioContext.currentTime);
+      whooshFilter.frequency.linearRampToValueAtTime(800, audioContext.currentTime + 0.2);
+      
+      whoosh.connect(whooshFilter);
+      whooshFilter.connect(whooshGain);
+      whooshGain.connect(audioContext.destination);
+      
+      whooshGain.gain.setValueAtTime(0, audioContext.currentTime);
+      whooshGain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.05);
+      whooshGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.35);
+      
+      whoosh.start(audioContext.currentTime);
+      whoosh.stop(audioContext.currentTime + 0.35);
+    }, 60);
+    
+  } catch (error) {
+    console.error('Error al reproducir sonido de estufa:', error);
   }
 }
 
@@ -295,8 +350,7 @@ async function cargarOrdenesCocina() {
     if (result.ok && result.ordenes) {
       const ordenesNuevas = result.ordenes;
       
-      // Detectar si hay nuevas órdenes (solo órdenes con estado 'nueva')
-      // Solo detectar si ya teníamos órdenes cargadas previamente
+      // DETECCIÓN 1: Nuevas órdenes (estado 'nueva')
       if (ordenesAnteriores && ordenesAnteriores.length > 0) {
         const idsAnteriores = ordenesAnteriores
           .filter(o => o.cocina_estado === 'nueva')
@@ -315,6 +369,32 @@ async function cargarOrdenesCocina() {
           if ('Notification' in window && Notification.permission === 'granted') {
             new Notification('🔔 Nueva orden en cocina', {
               body: `${nuevasOrdenesDetectadas.length} orden(es) nueva(s)`
+            });
+          }
+        }
+        
+        // DETECCIÓN 2: Órdenes que pasaron a 'entregada'
+        const ordenesEntregadasNuevas = [];
+        ordenesNuevas.forEach(ordenNueva => {
+          if (ordenNueva.cocina_estado === 'entregada') {
+            const ordenAnterior = ordenesAnteriores.find(o => o.orden_id === ordenNueva.orden_id);
+            // Si la orden existía antes y NO estaba en 'entregada', es una nueva entrega
+            if (ordenAnterior && ordenAnterior.cocina_estado !== 'entregada') {
+              ordenesEntregadasNuevas.push(ordenNueva);
+            }
+          }
+        });
+        
+        // Si hay órdenes recién entregadas, reproducir sonido de estufa
+        if (ordenesEntregadasNuevas.length > 0) {
+          console.log(`🔥 ${ordenesEntregadasNuevas.length} orden(es) lista(s) para entregar`);
+          reproducirSonidoEstufa();
+          
+          // Mostrar notificación visual
+          if ('Notification' in window && Notification.permission === 'granted') {
+            const mesas = ordenesEntregadasNuevas.map(o => `Mesa ${o.mesa}`).join(', ');
+            new Notification('🎉 Orden lista para entregar', {
+              body: `${ordenesEntregadasNuevas.length} orden(es): ${mesas}`
             });
           }
         }
