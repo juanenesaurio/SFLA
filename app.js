@@ -373,28 +373,28 @@ async function cargarOrdenesCocina() {
           }
         }
         
-        // DETECCIÓN 2: Órdenes que pasaron a 'entregada'
-        const ordenesEntregadasNuevas = [];
+        // DETECCIÓN 2: Órdenes que pasaron a 'lista'
+        const ordenesListasNuevas = [];
         ordenesNuevas.forEach(ordenNueva => {
-          if (ordenNueva.cocina_estado === 'entregada') {
+          if (ordenNueva.cocina_estado === 'lista') {
             const ordenAnterior = ordenesAnteriores.find(o => o.orden_id === ordenNueva.orden_id);
-            // Si la orden existía antes y NO estaba en 'entregada', es una nueva entrega
-            if (ordenAnterior && ordenAnterior.cocina_estado !== 'entregada') {
-              ordenesEntregadasNuevas.push(ordenNueva);
+            // Si la orden existía antes y NO estaba en 'lista', acaba de estar lista
+            if (ordenAnterior && ordenAnterior.cocina_estado !== 'lista') {
+              ordenesListasNuevas.push(ordenNueva);
             }
           }
         });
         
-        // Si hay órdenes recién entregadas, reproducir sonido de estufa
-        if (ordenesEntregadasNuevas.length > 0) {
-          console.log(`🔥 ${ordenesEntregadasNuevas.length} orden(es) lista(s) para entregar`);
+        // Si hay órdenes recién listas, reproducir sonido de estufa
+        if (ordenesListasNuevas.length > 0) {
+          console.log(`🔥 ${ordenesListasNuevas.length} orden(es) lista(s) para entregar`);
           reproducirSonidoEstufa();
           
           // Mostrar notificación visual
           if ('Notification' in window && Notification.permission === 'granted') {
-            const mesas = ordenesEntregadasNuevas.map(o => `Mesa ${o.mesa}`).join(', ');
-            new Notification('🎉 Orden lista para entregar', {
-              body: `${ordenesEntregadasNuevas.length} orden(es): ${mesas}`
+            const mesas = ordenesListasNuevas.map(o => `Mesa ${o.mesa}`).join(', ');
+            new Notification('🛎️ Orden lista para entregar', {
+              body: `${ordenesListasNuevas.length} orden(es): ${mesas}`
             });
           }
         }
