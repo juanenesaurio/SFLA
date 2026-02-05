@@ -520,7 +520,6 @@ function abrirDetalleOrdenCocina(index) {
   }
   // Si está entregada, no mostrar timer (ya se muestra el resumen)
 }
-}
 
 // Cerrar modal de detalle
 function cerrarDetalleOrdenCocina() {
