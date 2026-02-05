@@ -443,7 +443,7 @@ function abrirDetalleOrdenCocina(index) {
             <div class="${semaforoInfo.circuloClass} w-4 h-4 rounded-full"></div>
             <div class="font-bold">${semaforoInfo.texto}</div>
           </div>
-          ${(estadoCocina === 'cocinando' || estadoCocina === 'lista') ? '<div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>' : ''}
+          <div id="contadorTiempo" class="text-xl font-mono font-bold">00:00</div>
         </div>
       `}
       
@@ -499,13 +499,24 @@ function abrirDetalleOrdenCocina(index) {
   modal.classList.remove('hidden');
   
   // Iniciar contador de tiempo en vivo según el estado
-  const horaInicioCoccion = orden.hora_inicio_coccion;
-  if (horaInicioCoccion && (estadoCocina === 'cocinando' || estadoCocina === 'lista')) {
-    // En COCINANDO y LISTA, el timer corre desde hora_inicio_coccion hasta ahora
-    actualizarContadorTiempo(horaInicioCoccion);
-    intervalContadorTiempo = setInterval(() => {
+  if (estadoCocina === 'nueva') {
+    // En NUEVA, el timer corre desde hora_creacion
+    const horaCreacion = orden.hora_creacion || orden.hora;
+    if (horaCreacion) {
+      actualizarContadorTiempo(horaCreacion);
+      intervalContadorTiempo = setInterval(() => {
+        actualizarContadorTiempo(horaCreacion);
+      }, 1000);
+    }
+  } else if (estadoCocina === 'cocinando' || estadoCocina === 'lista') {
+    // En COCINANDO y LISTA, el timer corre desde hora_inicio_coccion
+    const horaInicioCoccion = orden.hora_inicio_coccion;
+    if (horaInicioCoccion) {
       actualizarContadorTiempo(horaInicioCoccion);
-    }, 1000);
+      intervalContadorTiempo = setInterval(() => {
+        actualizarContadorTiempo(horaInicioCoccion);
+      }, 1000);
+    }
   }
   // Si está entregada, no mostrar timer (ya se muestra el resumen)
 }
