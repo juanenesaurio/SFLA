@@ -500,24 +500,15 @@ function abrirDetalleOrdenCocina(index) {
   
   // Iniciar contador de tiempo en vivo según el estado
   const horaInicioCoccion = orden.hora_inicio_coccion;
-  if (horaInicioCoccion) {
-    if (estadoCocina === 'lista' && orden.tiempo_pausado) {
-      // Si está en LISTA y tiene tiempo pausado, mostrar ese tiempo sin actualizar
-      const elemento = document.getElementById('contadorTiempo');
-      if (elemento) {
-        const minutos = Math.floor(orden.tiempo_pausado / 60);
-        const segundos = orden.tiempo_pausado % 60;
-        elemento.textContent = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-      }
-    } else if (estadoCocina === 'cocinando') {
-      // Si está en COCINANDO, iniciar timer desde hora_inicio_coccion
+  if (horaInicioCoccion && (estadoCocina === 'cocinando' || estadoCocina === 'lista')) {
+    // En COCINANDO y LISTA, el timer corre desde hora_inicio_coccion hasta ahora
+    actualizarContadorTiempo(horaInicioCoccion);
+    intervalContadorTiempo = setInterval(() => {
       actualizarContadorTiempo(horaInicioCoccion);
-      intervalContadorTiempo = setInterval(() => {
-        actualizarContadorTiempo(horaInicioCoccion);
-      }, 1000);
-    }
-    // Si está entregada, no mostrar timer (ya se muestra el resumen)
+    }, 1000);
   }
+  // Si está entregada, no mostrar timer (ya se muestra el resumen)
+}
 }
 
 // Cerrar modal de detalle
@@ -612,8 +603,6 @@ async function cambiarEstadoCocinaOrden(nuevoEstado) {
   const orden = ordenesCocina[ordenCocinaSeleccionada];
   const estadoActual = orden.cocina_estado || 'nueva';
   
-  let tiempoPausado = null;
-  let resetearHoraCreacion = false;
   const ahora = new Date().toISOString();
   
   // Preparar datos según el nuevo estado
@@ -624,15 +613,9 @@ async function cambiarEstadoCocinaOrden(nuevoEstado) {
   if (nuevoEstado === 'cocinando') {
     // Al pasar a COCINANDO, guardar hora de inicio de cocción
     horaInicioCoccion = ahora;
-    tiempoPausado = null;
   } else if (nuevoEstado === 'lista') {
-    // Al pasar a LISTA, guardar hora de lista y calcular tiempo transcurrido
+    // Al pasar a LISTA, guardar hora de lista
     horaLista = ahora;
-    if (orden.hora_inicio_coccion) {
-      const inicio = new Date(orden.hora_inicio_coccion);
-      const fin = new Date(ahora);
-      tiempoPausado = Math.floor((fin - inicio) / 1000);
-    }
   } else if (nuevoEstado === 'entregada') {
     // Al pasar a ENTREGADA, guardar hora de entregada
     horaEntregada = ahora;
@@ -643,8 +626,6 @@ async function cambiarEstadoCocinaOrden(nuevoEstado) {
       action: 'cambiarEstadoCocina',
       orden_id: orden.orden_id,
       cocina_estado: nuevoEstado,
-      tiempo_pausado: tiempoPausado,
-      resetear_hora_creacion: resetearHoraCreacion,
       hora_inicio_coccion: horaInicioCoccion,
       hora_lista: horaLista,
       hora_entregada: horaEntregada
